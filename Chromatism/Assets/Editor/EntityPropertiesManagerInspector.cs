@@ -1,5 +1,5 @@
 ﻿//
-// EditorPropertiesManagerInspector.cs
+// EntityPropertiesManagerInspector.cs
 //
 // Author(s):
 //       Baptiste Dupy <baptiste.dupy@gmail.com>

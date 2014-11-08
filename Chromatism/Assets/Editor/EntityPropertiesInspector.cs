@@ -93,6 +93,29 @@ public class EntityPropertiesInspector : Editor
 
 		EditorGUILayout.Space();
 
+		EditorGUILayout.LabelField("Bindings 0:");
+
+		foreach(EntityProperties.Property prop in entityProperties.ChannelBindings(0))
+		{
+			EditorGUILayout.LabelField("    "+prop);
+		}
+
+		EditorGUILayout.LabelField("Bindings 1:");
+		
+		foreach(EntityProperties.Property prop in entityProperties.ChannelBindings(1))
+		{
+			EditorGUILayout.LabelField("    "+prop);
+		}
+
+		EditorGUILayout.LabelField("Bindings 2:");
+		
+		foreach(EntityProperties.Property prop in entityProperties.ChannelBindings(2))
+		{
+			EditorGUILayout.LabelField("    "+prop);
+		}
+
+		EditorGUILayout.Space();
+
 		if(GUILayout.Button("Update Bindings"))
 		{
 			entityProperties.SetChannelBindings();

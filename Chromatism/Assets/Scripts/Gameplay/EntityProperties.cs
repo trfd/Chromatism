@@ -28,7 +28,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
-public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
+public class EntityProperties : MonoBehaviour
 {
 	public enum Property
 	{
@@ -48,10 +48,20 @@ public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
 	public delegate void  PropertySetter(float value);
 	public delegate float PropertyGetter();
 
+	[System.Serializable]
 	public class PropertyBindingDelegates
 	{
+		#region Private Members
+
+		private PropertyGetter m_getter;
+
+		private PropertySetter m_setter;
+
+		#endregion
+
 		#region Properties
 
+		[UnityEngine.SerializeField]
 		public PropertyBinding Binding
 		{
 			get; set;
@@ -59,12 +69,22 @@ public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
 
 		public PropertyGetter Getter
 		{
-			get; set;
+			get{ return m_getter;  }
+			set{ m_getter = value; }
 		}
 
 		public PropertySetter Setter
 		{
-			get; set;
+			get{ return m_setter;  }
+			set{ m_setter = value; }
+		}
+
+		#endregion
+
+		#region Constructor
+
+		public PropertyBindingDelegates()
+		{
 		}
 
 		#endregion
@@ -73,6 +93,9 @@ public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
 
 		public void SetPropertyValue(float colorValue)
 		{
+			if(Setter == null)
+				return;
+
 			Setter(Binding.MapColorToProperty(colorValue));
 		}
 
@@ -87,6 +110,7 @@ public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
 		/// <summary>
 		/// Color value
 		/// </summary>
+		[UnityEngine.SerializeField]
 		private float m_colorValue;
 
 		/// <summary>
@@ -124,16 +148,16 @@ public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
 
 		public void SetPropertyBindings(EntityProperties entity, List<PropertyBinding> bindings)
 		{
-			if(m_bindingDelegates == null)
-				m_bindingDelegates = new List<PropertyBindingDelegates>();
-			else
-				m_bindingDelegates.Clear();
+			m_bindingDelegates.Clear();
 
 			foreach(PropertyBinding bind in bindings)
-				m_bindingDelegates.Add(BindingDelegate(entity,bind));
+			{
+				PropertyBindingDelegates delegates = BindingDelegate(entity,bind);
+				m_bindingDelegates.Add(delegates);
+			}
 		}
 
-		public static PropertyBindingDelegates BindingDelegate(EntityProperties entity,PropertyBinding propertyBinding)
+		public PropertyBindingDelegates BindingDelegate(EntityProperties entity,PropertyBinding propertyBinding)
 		{
 			PropertyBindingDelegates bindDelegates = new PropertyBindingDelegates();
 
@@ -307,10 +331,15 @@ public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
 			new ColorChannel(),
 			new ColorChannel()
 		};
+	}
 
+	#endregion
+
+	#region MonoBehaviour
+
+	public void Start()
+	{
 		SetChannelBindings();
-
-		EntityPropertiesManager.Instance.OnBindingsChange += SetChannelBindings;
 	}
 
 	#endregion
@@ -322,42 +351,24 @@ public class EntityProperties : MonoBehaviour , ISerializationCallbackReceiver
 		m_channels[0].SetPropertyBindings(this, EntityPropertiesManager.Instance._channel0Bindings);
 		m_channels[1].SetPropertyBindings(this, EntityPropertiesManager.Instance._channel1Bindings);
 		m_channels[2].SetPropertyBindings(this, EntityPropertiesManager.Instance._channel2Bindings);
+	}
 
-		Debug.Log("Bindings 0 :");
-		foreach(PropertyBindingDelegates d in m_channels[0].m_bindingDelegates)
+	public Property[] ChannelBindings(int channel)
+	{
+		int count = m_channels[channel].m_bindingDelegates.Count;
+
+		Property[] properties = new Property[count];
+
+		for(int i=0 ; i<count ; i++)
 		{
-			Debug.Log(d.Binding._boundProperty);
+			properties[i] = m_channels[channel].m_bindingDelegates[i].Binding._boundProperty;
 		}
-
-		Debug.Log("Bindings 1 :");
-		foreach(PropertyBindingDelegates d in m_channels[1].m_bindingDelegates)
-		{
-			Debug.Log(d.Binding._boundProperty);
-		}
-
-		Debug.Log("Bindings 2 :");
-		foreach(PropertyBindingDelegates d in m_channels[2].m_bindingDelegates)
-		{
-			Debug.Log(d.Binding._boundProperty);
-		}
-
+	
+		return properties;
 	}
 
 	#endregion
-
-	#region ISerialization Callback
-
-	public void OnBeforeSerialize()
-	{
-	}
-
-	public void OnAfterDeserialize()
-	{
-		SetChannelBindings();
-	}
-
-	#endregion
-
+	
 	#region Accessors
 
 	public ColorChannel Channel(int channel)
