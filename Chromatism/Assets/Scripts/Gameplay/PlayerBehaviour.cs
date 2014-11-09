@@ -34,9 +34,20 @@ public class PlayerBehaviour : MonoBehaviour
 {
 	#region Private Members
 
+	private Camera m_camera;
+
 	private EntityProperties m_properties;
 
+	private Weapon m_weapon;
+
 	private Pawn m_pawn;
+
+	/// <summary>
+	/// The coordinate (in world space) of point player is aiming at. 
+	/// </summary>
+	private Vector3 m_aimingPoint;
+
+	private Ray m_aimingRay;
 
 	#endregion
 
@@ -60,14 +71,41 @@ public class PlayerBehaviour : MonoBehaviour
 		get{ return m_pawn; }
 	}
 
+	public Weapon Weapon
+	{
+		get{ return m_weapon; }
+	}
+	
 	#endregion
 
 	#region MonoBehaviour
 
 	void Start()
 	{
+		m_camera = GetComponentInChildren<Camera>();
+
+		m_aimingRay = new Ray();
+
 		m_pawn = GetComponent<Pawn>();
 		m_properties = GetComponent<EntityProperties>();
+		m_weapon = GetComponentInChildren<Weapon>();
+
+		KeyBinder.Instance.DefineActions("MouseLeftClick", 
+		                                 new KeyActionConfig(KeyType.Action, 0,
+		                    			() => { m_weapon.StartShooting(); }, 
+										() => { m_weapon.StopShooting();  } ));
+	}
+
+	void Update()
+	{
+		m_aimingRay = new Ray(m_camera.transform.position,m_camera.transform.forward);
+
+		RaycastHit hit;
+
+		if(Physics.Raycast(m_aimingRay,out hit))
+			m_aimingPoint = hit.point;
+		else
+			m_aimingPoint = Vector3.zero;
 	}
 
 	#endregion

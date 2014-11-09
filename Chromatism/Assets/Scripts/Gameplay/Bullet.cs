@@ -31,6 +31,14 @@ public class Bullet : PoolableObject
 {
 	#region Private Members
 
+	/// <summary>
+	/// Starting Point of bullet.
+	/// </summary>
+	private Vector3 m_spawnPoint;
+
+	/// <summary>
+	/// Holds whether or not the bullet has hit something.
+	/// </summary>
 	private bool m_isUsed = false;
 
 	#endregion
@@ -47,6 +55,12 @@ public class Bullet : PoolableObject
 		get; set;
 	}
 
+	public float Range
+	{
+		get; set;
+	}
+
+	[InspectorLabel]
 	public Vector3 Velocity
 	{
 		get; set;
@@ -55,7 +69,6 @@ public class Bullet : PoolableObject
 	public bool IsUsed
 	{
 		get{ return m_isUsed;  }
-		set{ m_isUsed = value; }
 	}
 
 	#endregion
@@ -68,11 +81,109 @@ public class Bullet : PoolableObject
 
 	void Update()
 	{
+		if(m_isUsed)
+			return;
+
+		// Check still in range
+
+		if(Vector3.Distance(m_spawnPoint,transform.position) > Range)
+			OutOfRange();
+		else
+			transform.position += Time.deltaTime * Velocity;
+	}
+
+	void OnCollisionEnter(Collision coll)
+	{
+		TreatCollision(coll);
+	}
+
+	void OnCollisionStay(Collision coll)
+	{
+		TreatCollision(coll);
+	}
+
+	void OnCollisionExit(Collision coll)
+	{
+		TreatCollision(coll);
 	}
 
 	#endregion
 
 	#region Accessors
-	
+
+	#endregion
+
+	#region PoolableObject Override
+
+	/// <summary>
+	/// Called whenever the object is picked up in the pool.
+	/// This should be used for activating stuff.
+	/// </summary>
+	protected override void OnPoolInit()
+	{
+		//renderer.enabled = false;
+		//this.enabled = false;
+	}
+
+	/// <summary>
+	/// Called whenever the object is 
+	/// This should be used for deactivating stuff.
+	/// </summary>
+	protected override void OnPoolClear()
+	{
+		m_isUsed = false;
+		m_spawnPoint = Vector3.zero;
+
+		Damages  = 0f;
+		Range    = 0f;
+		Owner    = null;
+		Velocity = Vector3.zero;
+
+		renderer.enabled = true;
+		this.enabled = true;
+	}
+
+	#endregion
+
+	#region Bullet Methods
+
+	public void SpawnAt(Vector3 position)
+	{
+		m_spawnPoint = position;
+		transform.position = position;
+	}
+
+	/// <summary>
+	/// Called when bullet goes out of its range.
+	/// </summary>
+	private void OutOfRange()
+	{
+		//...
+
+		IsPoolable = true;
+	}
+
+	private void SetUsed()
+	{
+		m_isUsed = true;
+
+		// Do something ...
+
+		IsPoolable = true;
+	}
+
+	private void TreatCollision(Collision collision)
+	{
+		if(m_isUsed)
+			return;
+		
+		Pawn pawn = collision.gameObject.GetComponent<Pawn>();
+		
+		if(pawn != null)
+			pawn.HitByBullet(this);
+		
+		SetUsed();
+	}
+
 	#endregion
 }

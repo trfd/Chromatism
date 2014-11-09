@@ -37,6 +37,8 @@ public class Pawn : MonoBehaviour
 
 	private EntityProperties m_properties;
 
+	protected Vector3 m_aimingPoint;
+
 	#endregion
 
 	#region Public Members
@@ -53,7 +55,15 @@ public class Pawn : MonoBehaviour
 	[Tooltip("The coeficient of color loss when hit by a bullet")]
 	public float _channel2LossCoef = 1f;
 
-		
+	#endregion
+
+	#region Property Members
+
+	public Vector3 AimingPoint
+	{
+		get{ return m_aimingPoint; }
+	}
+
 	#endregion
 
 	#region Delegate

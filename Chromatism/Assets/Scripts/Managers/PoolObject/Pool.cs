@@ -43,8 +43,7 @@ public class Pool : MonoBehaviour
 		}
 	}
 
-
-	PoolableObject GetUnusedObject()
+	public PoolableObject GetUnusedObject()
 	{
 		PoolableObject tempPO = m_objects.Where(po => po.IsPoolable == true).FirstOrDefault();
 

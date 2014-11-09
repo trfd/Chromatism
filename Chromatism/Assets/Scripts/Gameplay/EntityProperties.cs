@@ -372,8 +372,6 @@ public class EntityProperties : MonoBehaviour
 		};
 
 		m_defaultValues = new float[(int)Property.PROPERTY_COUNT];
-
-		Debug.Log("Size: "+(int)Property.PROPERTY_COUNT+" vs "+m_defaultValues.Length);
 	}
 
 	#endregion

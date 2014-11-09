@@ -10,7 +10,8 @@ public static class KeyBindRefs
     {
         get
         {
-            var temp = new Dictionary<KeyConfig, List<string>>();
+			var temp = new Dictionary<KeyConfig, List<string>>();
+			temp.Add(new KeyConfig(KeyCode.Mouse0), new List<string>{"MouseLeftClick"});
 			temp.Add(new KeyConfig(KeyCode.Z), new List<string>{"Forward"});
 			temp.Add(new KeyConfig(KeyCode.S), new List<string>{"Backward"});
 			temp.Add(new KeyConfig(KeyCode.Q), new List<string>{"StrafeLeft"});
@@ -28,7 +29,8 @@ public static class KeyBindRefs
     {
         get
         {
-            var temp = new Dictionary<string, ActionConfig>();
+			var temp = new Dictionary<string, ActionConfig>();
+			temp.Add("MouseLeftClick", new KeyActionConfig(KeyType.Action, 0, null, null));
 			temp.Add("Forward", new KeyActionConfig(KeyType.Movement, 0, null, null));
 			temp.Add("Backward", new KeyActionConfig(KeyType.Movement, 1, null, null));
 			temp.Add("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, null, null));

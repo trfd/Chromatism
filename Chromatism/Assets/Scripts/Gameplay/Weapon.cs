@@ -35,12 +35,30 @@ public class Weapon : MonoBehaviour
 	/// <summary>
 	/// Number of bullet remaining in the magazine
 	/// </summary>
-	private int m_remainingBullet;
+	private int m_remainingBullets;
+	
+	#endregion
+
+	#region Public Member
+
+	/// <summary>
+	/// Bullet pool used to get bullets.
+	/// </summary>
+	public Pool _bulletPool;
+
+	/// <summary>
+	/// Location used to spawn bullets.
+	/// </summary>
+	public Transform _bulletSpawnTransform;
 
 	#endregion
 
 	#region Properties
 
+	/// <summary>
+	/// Pawn holding the weapon.
+	/// </summary>
+	/// <value>The owner.</value>
 	public Pawn Owner
 	{
 		get{ return m_owner; }
@@ -59,6 +77,15 @@ public class Weapon : MonoBehaviour
 	public float ReloadDuration
 	{
 		get{return m_properties.WeaponReloadDuration;}
+	}
+
+	/// <summary>
+	/// Gets the remaining bullets in weapon's magazine.
+	/// </summary>
+	/// <value>The remaining bullets.</value>
+	public int RemainingBullets
+	{
+		get{ return m_remainingBullets; }
 	}
 
 	#endregion
@@ -82,7 +109,7 @@ public class Weapon : MonoBehaviour
 		m_properties = m_owner.Properties;
 
 		m_shootTimer.Reset(1f/FireRate);
-		m_remainingBullet = (int) m_properties.WeaponMagazineSize;
+		m_remainingBullets = (int) m_properties.WeaponMagazineSize;
 	}
 
 	void Update()
@@ -111,13 +138,13 @@ public class Weapon : MonoBehaviour
 		m_isInputShooting = input;
 	}
 
-	[InspectorButton("Shoot")]
+	//[InspectorButton("Shoot")]
 	public void StartShooting()
 	{
 		m_isInputShooting = true;
 	}
 
-	[InspectorButton("Stop")]
+	//[InspectorButton("Stop")]
 	public void StopShooting()
 	{
 		m_isInputShooting = false;
@@ -138,14 +165,15 @@ public class Weapon : MonoBehaviour
 	private void EndReload()
 	{
 		m_isReloading = false;
-		m_remainingBullet = (int) m_properties.WeaponMagazineSize;
+		m_remainingBullets = (int) m_properties.WeaponMagazineSize;
 
 		Debug.Log("End Reload");
 	}
 
 	private bool CanShoot()
 	{
-		return (!m_isReloading && m_isInputShooting && m_shootTimer.IsElapsedLoop && m_remainingBullet > 0);
+		return (!m_isReloading && m_isInputShooting && 
+		        m_shootTimer.IsElapsedLoop && m_remainingBullets > 0);
 	}
 
 	private void Shoot()
@@ -153,17 +181,39 @@ public class Weapon : MonoBehaviour
 		// Warning: No double checks
 		// Shoot assumes this.CanShoot()
 
-		m_remainingBullet--;
+		m_remainingBullets--;
 
 		ShootBullet();
 
-		if(m_remainingBullet == 0)
+		if(m_remainingBullets == 0)
 			StartReload();
 	}
 
 	private void ShootBullet()
 	{
-		Debug.Log("PIOU");
+		Bullet newBullet = (Bullet) _bulletPool.GetUnusedObject();
+
+		if(newBullet == null)
+		{
+			Debug.LogError("Null bullet, skip shoot");
+			return;
+		}
+
+		newBullet.Owner   = Owner.gameObject;
+		newBullet.Damages = m_properties.WeaponBulletDamages;
+		newBullet.Range   = m_properties.WeaponBulletRange;
+
+		if(m_owner.AimingPoint == Vector3.zero)
+			newBullet.Velocity = m_properties.WeaponBulletVelocity * _bulletSpawnTransform.forward;
+		else
+		{
+			Vector3 dir = m_owner.AimingPoint - _bulletSpawnTransform.position;	
+			newBullet.Velocity = m_properties.WeaponBulletVelocity * dir.normalized;
+		}
+
+		newBullet.transform.localScale = m_properties.WeaponBulletSize * Vector3.one;
+
+		newBullet.SpawnAt(_bulletSpawnTransform.position);
 	}
 
 	#endregion
