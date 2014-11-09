@@ -44,6 +44,9 @@ public class EntityPropertiesInspector : Editor
 		if((entityProperties._defaultValueFoldout = 
 		    EditorGUILayout.Foldout(entityProperties._defaultValueFoldout,"Default Values")))
 		{
+
+			if(GUILayout.Button("Reset Values"))
+				entityProperties.ResetDefaultValues();
 		
 			entityProperties.SetDefaultValue(EntityProperties.Property.GRAVITY,
 			                                  EditorGUILayout.FloatField("Gravity", 
@@ -74,8 +77,12 @@ public class EntityPropertiesInspector : Editor
 			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_BULLET_RANGE)));
 
 			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_FIRERATE,
-			                                  EditorGUILayout.FloatField("EntityDashRange", 
+			                                  EditorGUILayout.FloatField("WeaponFireRate", 
 			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_FIRERATE)));
+
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_MAGAZINE_SIZE,
+			                                 EditorGUILayout.FloatField("WeaponMagazineSize", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_MAGAZINE_SIZE)));
 
 			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_PRECISION,
 			                                  EditorGUILayout.FloatField("WeaponPrecision", 
@@ -84,6 +91,7 @@ public class EntityPropertiesInspector : Editor
 			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_RELOAD_DURATION,
 			                                  EditorGUILayout.FloatField("WeaponReloadDuration", 
 			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_RELOAD_DURATION)));
+
 		}
 
 
@@ -163,6 +171,15 @@ public class EntityPropertiesInspector : Editor
 			EditorGUILayout.LabelField(entityProperties.WeaponFireRate.ToString());
 			
 			EditorGUILayout.EndHorizontal();
+
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponMagazineSize");
+			EditorGUILayout.LabelField(entityProperties.WeaponMagazineSize.ToString());
+			
+			EditorGUILayout.EndHorizontal();
 			
 			///
 			
@@ -184,11 +201,8 @@ public class EntityPropertiesInspector : Editor
 		
 		}
 
-
 		EditorGUILayout.Space();
-
-
-
+	
 		///
 
 		EditorGUILayout.LabelField("Bindings 0:");

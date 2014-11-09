@@ -33,18 +33,19 @@ public class EntityProperties : MonoBehaviour
 {
 	public enum Property
 	{
-		GRAVITY,
+		GRAVITY					= 0,
 		
-		ENTITY_VELOCITY,
-		ENTITY_DASH_RANGE,
+		ENTITY_VELOCITY			= 1,
+		ENTITY_DASH_RANGE		= 2,
 		
-		WEAPON_BULLET_DAMAGES,
-		WEAPON_BULLET_SIZE,
-		WEAPON_BULLET_VELOCITY,
-		WEAPON_BULLET_RANGE,
-		WEAPON_FIRERATE,
-		WEAPON_PRECISION,
-		WEAPON_RELOAD_DURATION,
+		WEAPON_BULLET_DAMAGES	= 3,
+		WEAPON_BULLET_SIZE		= 4,
+		WEAPON_BULLET_VELOCITY	= 5,
+		WEAPON_BULLET_RANGE		= 6,
+		WEAPON_MAGAZINE_SIZE	= 7,
+		WEAPON_FIRERATE			= 8,
+		WEAPON_PRECISION		= 9,
+		WEAPON_RELOAD_DURATION  = 10,
 
 		PROPERTY_COUNT
 	}
@@ -205,6 +206,10 @@ public class EntityProperties : MonoBehaviour
 				bindDelegates.Setter = (float value) => { entity.WeaponFireRate = value; };
 				bindDelegates.Getter = () => { return entity.WeaponFireRate; };
 				break;
+			case Property.WEAPON_MAGAZINE_SIZE:
+				bindDelegates.Setter = (float value) => { entity.WeaponMagazineSize = value; };
+				bindDelegates.Getter = () => { return entity.WeaponMagazineSize; };
+				break;
 			case Property.WEAPON_PRECISION:
 				bindDelegates.Setter = (float value) => { entity.WeaponPrecision = value; };
 				bindDelegates.Getter = () => { return entity.WeaponPrecision; };
@@ -328,7 +333,13 @@ public class EntityProperties : MonoBehaviour
 	/// </summary>
 	/// <value>The fire rate.</value>
 	public float WeaponFireRate { get; set; }
-	
+
+	/// <summary>
+	/// Number of bullet a weapon has in a magazine
+	/// </summary>
+	/// <value>The size of the weapon magazine.</value>
+	public float WeaponMagazineSize { get; set; }
+
 	/// <summary>
 	/// Precision of weapons held by entity.
 	/// </summary>
@@ -361,15 +372,21 @@ public class EntityProperties : MonoBehaviour
 		};
 
 		m_defaultValues = new float[(int)Property.PROPERTY_COUNT];
+
+		Debug.Log("Size: "+(int)Property.PROPERTY_COUNT+" vs "+m_defaultValues.Length);
 	}
 
 	#endregion
 
 	#region MonoBehaviour
 
+	public void Awake()
+	{
+		SetDefaultValues();;
+	}
+
 	public void Start()
 	{
-		SetDefaultValues();
 		SetChannelBindings();
 	}
 
@@ -453,6 +470,7 @@ public class EntityProperties : MonoBehaviour
 		case Property.WEAPON_BULLET_DAMAGES:  WeaponBulletDamages = value; break;
 		case Property.WEAPON_BULLET_RANGE:    WeaponBulletRange = value; break;
 		case Property.WEAPON_FIRERATE:		  WeaponFireRate = value; break;
+		case Property.WEAPON_MAGAZINE_SIZE:   WeaponMagazineSize = value; break;
 		case Property.WEAPON_PRECISION:		  WeaponPrecision = value; break;
 		case Property.WEAPON_RELOAD_DURATION: WeaponReloadDuration = value; break;
 		default: 
@@ -473,6 +491,7 @@ public class EntityProperties : MonoBehaviour
 		case Property.WEAPON_BULLET_DAMAGES:  return WeaponBulletDamages;
 		case Property.WEAPON_BULLET_RANGE:    return WeaponBulletRange;
 		case Property.WEAPON_FIRERATE:		  return WeaponFireRate;
+		case Property.WEAPON_MAGAZINE_SIZE:	  return WeaponMagazineSize;
 		case Property.WEAPON_PRECISION:		  return WeaponPrecision;
 		case Property.WEAPON_RELOAD_DURATION: return WeaponReloadDuration;
 		default: 
@@ -483,8 +502,16 @@ public class EntityProperties : MonoBehaviour
 		return 0f;
 	}
 
+	public void ResetDefaultValues()
+	{
+		m_defaultValues = new float[(int)Property.PROPERTY_COUNT];
+	}
+
 	public float DefaultValue(Property prop)
 	{
+		if(((int)prop) >= m_defaultValues.Length)
+			Debug.Log("Out Of Range Property: "+prop.ToString()+" int value:"+((int)prop)+" size: "+m_defaultValues.Length);
+
 		return m_defaultValues[(int) prop];
 	}
 

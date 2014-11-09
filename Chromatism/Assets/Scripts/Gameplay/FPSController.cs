@@ -85,7 +85,11 @@ public class FPSController : MonoBehaviour {
 				break;
 			// Dash
 			case 1 :
-				m_dashDirection = _camera.transform.forward + transform.right * m_right;
+				if(m_right == 0)
+					m_dashDirection = _camera.transform.forward;
+				else
+					m_dashDirection = transform.right * m_right;
+
 				m_dashDistanceRun = 0f;
 				rigidbody.useGravity = false;
 				m_jumpDash ++;
