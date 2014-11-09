@@ -27,6 +27,7 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Gameplay/Pawn")]
 [RequireComponent(typeof(EntityProperties))]
 public class Pawn : MonoBehaviour
 {
@@ -44,14 +45,15 @@ public class Pawn : MonoBehaviour
 	/// The coeficient of color loss when hit by a bullet.
 	/// </summary>
 	[Tooltip("The coeficient of color loss when hit by a bullet")]
-	public float _colorLossCoef = 1f;
+	public float _channel0LossCoef = 1f;
 
-	/// <summary>
-	/// The coeficient of color gain when hit by a bullet
-	/// </summary>
-	[Tooltip("The coeficient of color gain when hit by a bullet")]
-	public float _colorGainCoef = 1f;
+	[Tooltip("The coeficient of color loss when hit by a bullet")]
+	public float _channel1LossCoef = 1f;
 
+	[Tooltip("The coeficient of color loss when hit by a bullet")]
+	public float _channel2LossCoef = 1f;
+
+		
 	#endregion
 
 	#region Delegate
@@ -94,9 +96,9 @@ public class Pawn : MonoBehaviour
 
 		EntityProperties otherProperties = bullet.Owner.GetComponent<EntityProperties>();
 
-		m_properties.ColorChannel0 -= _colorLossCoef * bullet.Damages * otherProperties.ColorChannel0;
-		m_properties.ColorChannel1 -= _colorLossCoef * bullet.Damages * otherProperties.ColorChannel1;
-		m_properties.ColorChannel2 -= _colorLossCoef * bullet.Damages * otherProperties.ColorChannel2;
+		m_properties.ColorChannel0 -= _channel0LossCoef * bullet.Damages * otherProperties.ColorChannel0;
+		m_properties.ColorChannel1 -= _channel1LossCoef * bullet.Damages * otherProperties.ColorChannel1;
+		m_properties.ColorChannel2 -= _channel2LossCoef * bullet.Damages * otherProperties.ColorChannel2;
 
 		if(m_properties.ColorChannel0 <= 0 || 
 		   m_properties.ColorChannel1 <= 0 ||
@@ -106,10 +108,22 @@ public class Pawn : MonoBehaviour
 		}
 	}
 
+	/*
+	[InspectorButton("Shoot",0.2f)]
+	private void MockHit(float damages)
+	{
+		Bullet bullet = new Bullet();
+		bullet.Owner   = GameObject.Find("Enemy");
+		bullet.Damages = damages;
+		HitByBullet(bullet);
+	}
+	*/
+
 	#endregion
 
 	#region Life Management
 
+	//[InspectorButton("Kill")]
 	public virtual void Die()
 	{
 		if(OnPawnDie != null)

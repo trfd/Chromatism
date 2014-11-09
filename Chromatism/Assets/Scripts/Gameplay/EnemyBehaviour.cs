@@ -27,7 +27,9 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Gameplay/EnemyBehaviour")]
 [RequireComponent(typeof(Pawn))]
+[RequireComponent(typeof(EntityProperties))]
 public class EnemyBehaviour : MonoBehaviour
 {
 	#region Private Members
@@ -54,6 +56,7 @@ public class EnemyBehaviour : MonoBehaviour
 
 	void Start()
 	{
+		m_properties = GetComponent<EntityProperties>();
 		m_pawn = GetComponent<Pawn>();
 
 		m_pawn.OnPawnDie += OnEnemyDie;

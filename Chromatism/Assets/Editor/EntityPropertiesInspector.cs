@@ -41,98 +41,168 @@ public class EntityPropertiesInspector : Editor
 
 		EditorGUILayout.Space();
 
-		///
+		if((entityProperties._defaultValueFoldout = 
+		    EditorGUILayout.Foldout(entityProperties._defaultValueFoldout,"Default Values")))
+		{
 
-		EditorGUILayout.BeginHorizontal();
+			if(GUILayout.Button("Reset Values"))
+				entityProperties.ResetDefaultValues();
+		
+			entityProperties.SetDefaultValue(EntityProperties.Property.GRAVITY,
+			                                  EditorGUILayout.FloatField("Gravity", 
+										entityProperties.DefaultValue(EntityProperties.Property.GRAVITY)));
+			
+			entityProperties.SetDefaultValue(EntityProperties.Property.ENTITY_DASH_RANGE,
+			                                  EditorGUILayout.FloatField("EntityDashRange", 
+										entityProperties.DefaultValue(EntityProperties.Property.ENTITY_DASH_RANGE)));
 
-		EditorGUILayout.LabelField("Gravity");
-		EditorGUILayout.LabelField(entityProperties.Gravity.ToString());
+			entityProperties.SetDefaultValue(EntityProperties.Property.ENTITY_VELOCITY,
+			                                  EditorGUILayout.FloatField("EntityVelocity", 
+			                           	entityProperties.DefaultValue(EntityProperties.Property.ENTITY_VELOCITY)));
 
-		EditorGUILayout.EndHorizontal();
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_BULLET_SIZE,
+			                                  EditorGUILayout.FloatField("EntityBulletSize", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_BULLET_SIZE)));
 
-		///
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_BULLET_VELOCITY,
+			                                  EditorGUILayout.FloatField("WeaponBulletVelocity", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_BULLET_VELOCITY)));
 
-		EditorGUILayout.BeginHorizontal();
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_BULLET_DAMAGES,
+			                                  EditorGUILayout.FloatField("WeaponDamages", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_BULLET_DAMAGES)));
 
-		EditorGUILayout.LabelField("WeaponBulletSize");
-		EditorGUILayout.LabelField(entityProperties.WeaponBulletSize.ToString());
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_BULLET_RANGE,
+			                                  EditorGUILayout.FloatField("WeaponRange", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_BULLET_RANGE)));
 
-		EditorGUILayout.EndHorizontal();
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_FIRERATE,
+			                                  EditorGUILayout.FloatField("WeaponFireRate", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_FIRERATE)));
 
-		///
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_MAGAZINE_SIZE,
+			                                 EditorGUILayout.FloatField("WeaponMagazineSize", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_MAGAZINE_SIZE)));
 
-		EditorGUILayout.BeginHorizontal();
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_PRECISION,
+			                                  EditorGUILayout.FloatField("WeaponPrecision", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_PRECISION)));
 
-		EditorGUILayout.LabelField("WeaponBulletVelocity");
-		EditorGUILayout.LabelField(entityProperties.WeaponBulletVelocity.ToString());
+			entityProperties.SetDefaultValue(EntityProperties.Property.WEAPON_RELOAD_DURATION,
+			                                  EditorGUILayout.FloatField("WeaponReloadDuration", 
+			                           entityProperties.DefaultValue(EntityProperties.Property.WEAPON_RELOAD_DURATION)));
 
-		EditorGUILayout.EndHorizontal();
+		}
 
-		///
-
-		EditorGUILayout.BeginHorizontal();
-
-		EditorGUILayout.LabelField("WeaponDamages");
-		EditorGUILayout.LabelField(entityProperties.WeaponDamages.ToString());
-
-		EditorGUILayout.EndHorizontal();
-
-		///
-
-		EditorGUILayout.BeginHorizontal();
-
-		EditorGUILayout.LabelField("WeaponFireRate");
-		EditorGUILayout.LabelField(entityProperties.WeaponFireRate.ToString());
-
-		EditorGUILayout.EndHorizontal();
-
-		///
-
-		EditorGUILayout.BeginHorizontal();
-
-		EditorGUILayout.LabelField("WeaponPrecision");
-		EditorGUILayout.LabelField(entityProperties.WeaponPrecision.ToString());
-
-		EditorGUILayout.EndHorizontal();
-
-		///
-
-		EditorGUILayout.BeginHorizontal();
-
-		EditorGUILayout.LabelField("WeaponRange");
-		EditorGUILayout.LabelField(entityProperties.WeaponRange.ToString());
-
-		EditorGUILayout.EndHorizontal();
-
-		///
-
-		EditorGUILayout.BeginHorizontal();
-
-		EditorGUILayout.LabelField("WeaponReloadDuration");
-		EditorGUILayout.LabelField(entityProperties.WeaponReloadDuration.ToString());
-
-		EditorGUILayout.EndHorizontal();
-
-		///
-
-		EditorGUILayout.BeginHorizontal();
-
-		EditorGUILayout.LabelField("EntityDashRange");
-		EditorGUILayout.LabelField(entityProperties.EntityDashRange.ToString());
-
-		EditorGUILayout.EndHorizontal();
-
-		///
-
-		EditorGUILayout.BeginHorizontal();
-
-		EditorGUILayout.LabelField("EntityVelocity");
-		EditorGUILayout.LabelField(entityProperties.EntityVelocity.ToString());
-
-		EditorGUILayout.EndHorizontal();
 
 		EditorGUILayout.Space();
 
+		///
+
+		if((entityProperties._currentValueFoldout = 
+		    EditorGUILayout.Foldout(entityProperties._currentValueFoldout,"Current Values")))
+		{
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("Gravity");
+			EditorGUILayout.LabelField(entityProperties.Gravity.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+			
+			///
+
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("EntityDashRange");
+			EditorGUILayout.LabelField(entityProperties.EntityDashRange.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+			
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("EntityVelocity");
+			EditorGUILayout.LabelField(entityProperties.EntityVelocity.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponBulletSize");
+			EditorGUILayout.LabelField(entityProperties.WeaponBulletSize.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+			
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponBulletVelocity");
+			EditorGUILayout.LabelField(entityProperties.WeaponBulletVelocity.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+			
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponBulletDamages");
+			EditorGUILayout.LabelField(entityProperties.WeaponBulletDamages.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+
+			///
+
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponBulletRange");
+			EditorGUILayout.LabelField(entityProperties.WeaponBulletRange.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponFireRate");
+			EditorGUILayout.LabelField(entityProperties.WeaponFireRate.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponMagazineSize");
+			EditorGUILayout.LabelField(entityProperties.WeaponMagazineSize.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+			
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponPrecision");
+			EditorGUILayout.LabelField(entityProperties.WeaponPrecision.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+			
+			///
+			
+			EditorGUILayout.BeginHorizontal();
+			
+			EditorGUILayout.LabelField("WeaponReloadDuration");
+			EditorGUILayout.LabelField(entityProperties.WeaponReloadDuration.ToString());
+			
+			EditorGUILayout.EndHorizontal();
+		
+		}
+
+		EditorGUILayout.Space();
+	
 		///
 
 		EditorGUILayout.LabelField("Bindings 0:");
