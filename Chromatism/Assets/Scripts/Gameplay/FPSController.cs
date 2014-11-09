@@ -149,7 +149,7 @@ public class FPSController : MonoBehaviour {
 
 	void StartDash(Vector3 direction)
 	{
-		if(m_dashTimer.IsElapsedLoop)
+		if(m_dashTimer.IsElapsedLoop || _dashCooldown == 0)
 		{
 			m_dashDirection = direction;
 			m_dashDistanceRun = 0f;
