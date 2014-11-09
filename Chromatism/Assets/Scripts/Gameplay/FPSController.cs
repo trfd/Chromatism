@@ -171,13 +171,13 @@ public class FPSController : MonoBehaviour {
 	// rotating camera left and right
 	void MouseX(float value)
 	{
-		transform.Rotate(Vector3.up * (value *_rotateSpeed * Time.deltaTime));
+		transform.Rotate(Vector3.up * (value *_rotateSpeed));
 	}
 
 	//rotating camera up and down
 	void MouseY(float value)
 	{
-		_camera.transform.Rotate(Vector3.right * (-value * _rotateSpeed * Time.deltaTime));
+		_camera.transform.Rotate(Vector3.right * (-value * _rotateSpeed));
 	}
 
 	#endregion
