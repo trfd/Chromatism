@@ -114,9 +114,9 @@ public class PlayerBehaviour : MonoBehaviour
 
 	public void OnEnemyDie(EnemyBehaviour enemy)
 	{
-		Properties.ColorChannel0 += _channel0Gain * enemy.Properties.ColorChannel0;
-		Properties.ColorChannel1 += _channel1Gain * enemy.Properties.ColorChannel1;
-		Properties.ColorChannel2 += _channel2Gain * enemy.Properties.ColorChannel2;
+		Properties.ColorChannel0 += _channel0Gain * enemy._initChannel0;
+		Properties.ColorChannel1 += _channel1Gain * enemy._initChannel1;
+		Properties.ColorChannel2 += _channel2Gain * enemy._initChannel2;
 	}
 
 	#endregion

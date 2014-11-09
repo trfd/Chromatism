@@ -136,7 +136,7 @@ public class EntityProperties : MonoBehaviour
 			get{ return m_colorValue; }
 			set
 			{
-				m_colorValue = value;
+				m_colorValue = Mathf.Clamp01(value);
 				foreach(PropertyBindingDelegates delegates in m_bindingDelegates)
 					delegates.SetPropertyValue(m_colorValue);
 			}

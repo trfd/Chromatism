@@ -37,6 +37,12 @@ public class Pawn : MonoBehaviour
 
 	private EntityProperties m_properties;
 
+	private bool m_isDead = false;
+
+	#endregion
+
+	#region Protected Members
+
 	protected Vector3 m_aimingPoint;
 
 	#endregion
@@ -87,6 +93,11 @@ public class Pawn : MonoBehaviour
 		}
 	}
 
+	public bool IsDead
+	{
+		get{ return m_isDead; }
+	}
+
 	#endregion
 
 	#region MonoBehaviour
@@ -106,7 +117,7 @@ public class Pawn : MonoBehaviour
 
 	public virtual void HitByBullet(Bullet bullet)
 	{
-		if(bullet.IsUsed)
+		if(bullet.IsUsed || m_isDead)
 			return;
 
 		EntityProperties otherProperties = bullet.Owner.GetComponent<EntityProperties>();
@@ -141,6 +152,8 @@ public class Pawn : MonoBehaviour
 	//[InspectorButton("Kill")]
 	public virtual void Die()
 	{
+		m_isDead = true;
+
 		if(OnPawnDie != null)
 			OnPawnDie(this);
 	}

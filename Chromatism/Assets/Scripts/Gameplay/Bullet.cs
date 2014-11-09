@@ -50,6 +50,11 @@ public class Bullet : PoolableObject
 		get; set;
 	}
 
+	public Weapon ParentWeapon
+	{
+		get; set;
+	}
+
 	public float Damages
 	{
 		get; set;
@@ -121,8 +126,11 @@ public class Bullet : PoolableObject
 	/// </summary>
 	protected override void OnPoolInit()
 	{
-		//renderer.enabled = false;
-		//this.enabled = false;
+		collider.enabled = true;
+		renderer.enabled = true;
+		this.enabled = true;
+
+		m_isUsed = false;
 	}
 
 	/// <summary>
@@ -131,7 +139,7 @@ public class Bullet : PoolableObject
 	/// </summary>
 	protected override void OnPoolClear()
 	{
-		m_isUsed = false;
+		m_isUsed = true;
 		m_spawnPoint = Vector3.zero;
 
 		Damages  = 0f;
@@ -139,8 +147,10 @@ public class Bullet : PoolableObject
 		Owner    = null;
 		Velocity = Vector3.zero;
 
-		renderer.enabled = true;
-		this.enabled = true;
+		collider.enabled = false;
+		renderer.enabled = false;
+		this.enabled = false;
+		rigidbody.Sleep();
 	}
 
 	#endregion
@@ -177,10 +187,16 @@ public class Bullet : PoolableObject
 		if(m_isUsed)
 			return;
 		
-		Pawn pawn = collision.gameObject.GetComponent<Pawn>();
+		Pawn pawn = collision.gameObject.GetComponentInParent<Pawn>();
 		
 		if(pawn != null)
+		{
+			// Avoid collision with self
+			if(pawn == ParentWeapon.Owner)
+				return;
+
 			pawn.HitByBullet(this);
+		}
 		
 		SetUsed();
 	}

@@ -202,6 +202,7 @@ public class Weapon : MonoBehaviour
 		newBullet.Owner   = Owner.gameObject;
 		newBullet.Damages = m_properties.WeaponBulletDamages;
 		newBullet.Range   = m_properties.WeaponBulletRange;
+		newBullet.ParentWeapon = this;
 
 		if(m_owner.AimingPoint == Vector3.zero)
 			newBullet.Velocity = m_properties.WeaponBulletVelocity * _bulletSpawnTransform.forward;

@@ -40,6 +40,28 @@ public class EnemyBehaviour : MonoBehaviour
 
 	#endregion
 
+	#region Public Members
+
+	/// <summary>
+	/// Value of initialization for channel 0.
+	/// </summary>
+	[Range(0f,1f)]
+	public float _initChannel0;
+
+	/// <summary>
+	/// Value of initialization for channel 1.
+	/// </summary>
+	[Range(0f,1f)]
+	public float _initChannel1;
+
+	/// <summary>
+	/// Value of initialization for channel 2.
+	/// </summary>
+	[Range(0f,1f)]
+	public float _initChannel2;
+
+	#endregion
+
 	#region Properties
 
 	public EntityProperties Properties
@@ -60,6 +82,10 @@ public class EnemyBehaviour : MonoBehaviour
 		m_pawn = GetComponent<Pawn>();
 
 		m_pawn.OnPawnDie += OnEnemyDie;
+
+		m_properties.ColorChannel0 = _initChannel0;
+		m_properties.ColorChannel1 = _initChannel1;
+		m_properties.ColorChannel2 = _initChannel2;
 	}
 
 	void Update()
