@@ -41,57 +41,99 @@ public class EntityPropertiesInspector : Editor
 
 		EditorGUILayout.Space();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("Gravity");
 		EditorGUILayout.LabelField(entityProperties.Gravity.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("WeaponBulletSize");
 		EditorGUILayout.LabelField(entityProperties.WeaponBulletSize.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("WeaponBulletVelocity");
 		EditorGUILayout.LabelField(entityProperties.WeaponBulletVelocity.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("WeaponDamages");
 		EditorGUILayout.LabelField(entityProperties.WeaponDamages.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("WeaponFireRate");
 		EditorGUILayout.LabelField(entityProperties.WeaponFireRate.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("WeaponPrecision");
 		EditorGUILayout.LabelField(entityProperties.WeaponPrecision.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("WeaponRange");
 		EditorGUILayout.LabelField(entityProperties.WeaponRange.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("WeaponReloadDuration");
 		EditorGUILayout.LabelField(entityProperties.WeaponReloadDuration.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("EntityDashRange");
 		EditorGUILayout.LabelField(entityProperties.EntityDashRange.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
+		///
+
 		EditorGUILayout.BeginHorizontal();
+
 		EditorGUILayout.LabelField("EntityVelocity");
 		EditorGUILayout.LabelField(entityProperties.EntityVelocity.ToString());
+
 		EditorGUILayout.EndHorizontal();
 
 		EditorGUILayout.Space();
+
+		///
 
 		EditorGUILayout.LabelField("Bindings 0:");
 

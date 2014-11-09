@@ -1,5 +1,5 @@
 ﻿//
-// Enemy.cs
+// PlayerBehaviour.cs
 //
 // Author(s):
 //       Baptiste Dupy <baptiste.dupy@gmail.com>
@@ -28,30 +28,46 @@ using UnityEngine;
 using System.Collections;
 
 [RequireComponent(typeof(Pawn))]
-public class Enemy : MonoBehaviour
+[RequireComponent(typeof(PlayerBehaviour))]
+public class PlayerBehaviour : MonoBehaviour
 {
 	#region Private Members
+
+	private EntityProperties m_properties;
 
 	private Pawn m_pawn;
 
 	#endregion
 
+	#region Properties
+
+	public EntityProperties Properties
+	{
+		get; set;
+	}
+
+	public Pawn Pawn
+	{
+		get; set;
+	}
+
+	#endregion
+
+	#region MonoBehaviour
+
 	void Start()
 	{
 		m_pawn = GetComponent<Pawn>();
-
-		m_pawn.OnPawnDie += OnEnemyDie;
+		m_properties = GetComponent<EntityProperties>();
 	}
 
-	void Update()
-	{
-	}
+	#endregion
 
-	#region Enemy Death
+	#region Callbacks
 
-	private void OnEnemyDie(Pawn pawn)
+	public void OnEnemyDie(EnemyBehaviour enemy)
 	{
-		
+		//TODO: Implementation
 	}
 
 	#endregion
