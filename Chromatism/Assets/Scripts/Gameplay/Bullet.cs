@@ -27,7 +27,7 @@
 using UnityEngine;
 using System.Collections;
 
-public class Bullet : MonoBehaviour
+public class Bullet : PoolableObject
 {
 	#region Private Members
 
