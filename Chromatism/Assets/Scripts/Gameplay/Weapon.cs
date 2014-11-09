@@ -39,7 +39,6 @@ public class Weapon : MonoBehaviour
 
 	#endregion
 
-
 	#region Properties
 
 	public Pawn Owner

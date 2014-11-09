@@ -69,7 +69,12 @@ public class Pawn : MonoBehaviour
 
 	public EntityProperties Properties
 	{
-		get{ return m_properties; }
+		get
+		{ 
+			if(m_properties == null)
+				m_properties = GetComponent<EntityProperties>();
+			return m_properties; 
+		}
 	}
 
 	#endregion
