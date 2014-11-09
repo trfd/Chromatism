@@ -15,7 +15,7 @@ public static class KeyBindRefs
 			temp.Add(new KeyConfig(KeyCode.S), new List<string>{"Backward"});
 			temp.Add(new KeyConfig(KeyCode.Q), new List<string>{"StrafeLeft"});
 			temp.Add(new KeyConfig(KeyCode.D), new List<string>{"StrafeRight"});
-			temp.Add(new KeyConfig(KeyCode.Space), new List<string>{"Jump"});
+			temp.Add(new KeyConfig(KeyCode.Space), new List<string>{"Jump/Dash"});
 			temp.Add(new KeyConfig("MouseX"), new List<string>{"MouseX"});
 			temp.Add(new KeyConfig("MouseY"), new List<string>{"MouseY"});
 			temp.Add(new KeyConfig(KeyCode.Tab), new List<string>{"KeyBindGUI"});
@@ -33,7 +33,7 @@ public static class KeyBindRefs
 			temp.Add("Backward", new KeyActionConfig(KeyType.Movement, 1, null, null));
 			temp.Add("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, null, null));
 			temp.Add("StrafeRight", new KeyActionConfig(KeyType.Movement, 3, null, null));
-			temp.Add("Jump", new KeyActionConfig(KeyType.Movement, 4, null, null));
+			temp.Add("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, null, null));
 			temp.Add("MouseX", new AxisActionConfig(KeyType.Head, 0, null));
 			temp.Add("MouseY", new AxisActionConfig(KeyType.Head, 0, null));
 			temp.Add("KeyBindGUI", new KeyActionConfig(KeyType.Menu, 0, null, null));
