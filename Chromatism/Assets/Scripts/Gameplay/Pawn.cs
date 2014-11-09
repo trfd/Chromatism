@@ -30,6 +30,8 @@ using System.Collections;
 [RequireComponent(typeof(EntityProperties))]
 public class Pawn : MonoBehaviour
 {
+	public delegate void PawnDelegate(Pawn pawn);
+
 	#region Private Members
 
 	private EntityProperties m_properties;
@@ -49,6 +51,15 @@ public class Pawn : MonoBehaviour
 	/// </summary>
 	[Tooltip("The coeficient of color gain when hit by a bullet")]
 	public float _colorGainCoef = 1f;
+
+	#endregion
+
+	#region Delegate
+
+	public PawnDelegate OnPawnDie
+	{
+		get; set; 
+	}
 
 	#endregion
 
@@ -76,7 +87,7 @@ public class Pawn : MonoBehaviour
 
 	#region Hit
 
-	public void HitByBullet(Bullet bullet)
+	public virtual void HitByBullet(Bullet bullet)
 	{
 		if(bullet.IsUsed)
 			return;
@@ -86,16 +97,23 @@ public class Pawn : MonoBehaviour
 		m_properties.ColorChannel0 -= _colorLossCoef * bullet.Damages * otherProperties.ColorChannel0;
 		m_properties.ColorChannel1 -= _colorLossCoef * bullet.Damages * otherProperties.ColorChannel1;
 		m_properties.ColorChannel2 -= _colorLossCoef * bullet.Damages * otherProperties.ColorChannel2;
+
+		if(m_properties.ColorChannel0 <= 0 || 
+		   m_properties.ColorChannel1 <= 0 ||
+		   m_properties.ColorChannel2 <= 0 )
+		{
+			Die();
+		}
 	}
 
-	public void HitPawn(Pawn other, Bullet bullet)
-	{
-		if(bullet.IsUsed)
-			return;
+	#endregion
 
-		m_properties.ColorChannel0 += _colorGainCoef * bullet.Damages * other.Properties.ColorChannel0;
-		m_properties.ColorChannel1 += _colorGainCoef * bullet.Damages * other.Properties.ColorChannel1;
-		m_properties.ColorChannel2 += _colorGainCoef * bullet.Damages * other.Properties.ColorChannel2;
+	#region Life Management
+
+	public virtual void Die()
+	{
+		if(OnPawnDie != null)
+			OnPawnDie(this);
 	}
 
 	#endregion
