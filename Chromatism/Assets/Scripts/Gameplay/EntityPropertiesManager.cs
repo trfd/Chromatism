@@ -72,6 +72,7 @@ public class PropertyBinding
 
 }
 
+[AddComponentMenu("Gameplay/EntityPropertiesManager")]
 public class EntityPropertiesManager : MonoBehaviour
 {
 	#region Singleton

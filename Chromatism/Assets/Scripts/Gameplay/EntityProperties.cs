@@ -28,6 +28,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+[AddComponentMenu("Gameplay/EntityProperties")]
 public class EntityProperties : MonoBehaviour
 {
 	public enum Property
