@@ -27,6 +27,7 @@
 using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Gameplay/PlayerBehaviour")]
 [RequireComponent(typeof(Pawn))]
 [RequireComponent(typeof(PlayerBehaviour))]
 public class PlayerBehaviour : MonoBehaviour
@@ -39,16 +40,24 @@ public class PlayerBehaviour : MonoBehaviour
 
 	#endregion
 
+	#region Public Properties
+
+	public float _channel0Gain = 0.1f;
+	public float _channel1Gain = 0.1f;
+	public float _channel2Gain = 0.1f;
+	
+	#endregion
+
 	#region Properties
 
 	public EntityProperties Properties
 	{
-		get; set;
+		get{ return m_properties; }
 	}
 
 	public Pawn Pawn
 	{
-		get; set;
+		get{ return m_pawn; }
 	}
 
 	#endregion
@@ -67,7 +76,9 @@ public class PlayerBehaviour : MonoBehaviour
 
 	public void OnEnemyDie(EnemyBehaviour enemy)
 	{
-		//TODO: Implementation
+		Properties.ColorChannel0 += _channel0Gain * enemy.Properties.ColorChannel0;
+		Properties.ColorChannel1 += _channel1Gain * enemy.Properties.ColorChannel1;
+		Properties.ColorChannel2 += _channel2Gain * enemy.Properties.ColorChannel2;
 	}
 
 	#endregion
