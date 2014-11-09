@@ -12,6 +12,7 @@ public class FPSController : MonoBehaviour {
 	public float _jumpForce;
 	public float _dashDistance;
 	public float _dashSpeed;
+	public float _dashCooldown;
 
 	// Refs
 	public GameObject _camera;
@@ -21,8 +22,21 @@ public class FPSController : MonoBehaviour {
 	// Movement members
 	private int m_forward = 0;
 	private int m_right = 0;
-	private int m_jumpDash = 0;
+	private bool m_canJump = false;
 
+	enum Direction
+	{
+		NONE,
+		FORWARD,
+		BACKWARD,
+		LEFT,
+		RIGHT
+	}
+
+	// Dash
+	private Direction m_lastDirection; 
+	private Timer m_doubleKeyTimer; 
+	private Timer m_dashTimer;
 	private Vector3 m_dashDirection;
 	private float m_dashDistanceRun = 0f;
 
@@ -34,14 +48,16 @@ public class FPSController : MonoBehaviour {
 	void Start ()
 	{
 		//move and camera controls
-		KeyBinder.Instance.DefineActions("Forward", new KeyActionConfig(KeyType.Movement, 0, () => {if(m_forward <1)m_forward += 1;}, () => {m_forward -= 1;}));
-		KeyBinder.Instance.DefineActions("Backward", new KeyActionConfig(KeyType.Movement, 1, () => {if(m_forward > -1)m_forward -= 1;}, () => {m_forward += 1;}));
-		KeyBinder.Instance.DefineActions("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, () => {if(m_right > -1)m_right -= 1;}, () => {m_right += 1;}));
-		KeyBinder.Instance.DefineActions("StrafeRight", new KeyActionConfig(KeyType.Movement, 3, () => {if(m_right < 1)m_right += 1;}, () => {m_right -= 1;}));
-		KeyBinder.Instance.DefineActions("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, JumpOrDash, null));
+		KeyBinder.Instance.DefineActions("Forward", new KeyActionConfig(KeyType.Movement, 0, Forward, () => {m_forward -= 1;}));
+		KeyBinder.Instance.DefineActions("Backward", new KeyActionConfig(KeyType.Movement, 1, Backward, () => {m_forward += 1;}));
+		KeyBinder.Instance.DefineActions("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, StrafeLeft, () => {m_right += 1;}));
+		KeyBinder.Instance.DefineActions("StrafeRight", new KeyActionConfig(KeyType.Movement, 3, StrafeRight, () => {m_right -= 1;}));
+		KeyBinder.Instance.DefineActions("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, () => {if(m_canJump){rigidbody.AddForce(Vector3.up * _jumpForce);m_canJump = false;}}, null));
 		KeyBinder.Instance.DefineActions("MouseX", new AxisActionConfig(KeyType.Head, 0, MouseX));
 		KeyBinder.Instance.DefineActions("MouseY", new AxisActionConfig(KeyType.Head, 0, MouseY));
 
+		m_doubleKeyTimer = new Timer();
+		m_dashTimer = new Timer();
 	}
 
 	// applying movement
@@ -53,6 +69,7 @@ public class FPSController : MonoBehaviour {
 			m_dashDistanceRun += _dashSpeed * Time.deltaTime;
 			if(m_dashDistanceRun >= _dashDistance)
 			{
+				m_dashTimer.Reset(_dashCooldown);
 				StopDash();
 			}
 			return;
@@ -74,26 +91,70 @@ public class FPSController : MonoBehaviour {
 
 	#region Movement
 
-	void JumpOrDash()
+	void Forward()
 	{
-		switch(m_jumpDash)
-		{
-			// Jump
-			case 0 : 
-				rigidbody.AddForce(Vector3.up * _jumpForce);
-				m_jumpDash ++;
-				break;
-			// Dash
-			case 1 :
-				if(m_right == 0)
-					m_dashDirection = _camera.transform.forward;
-				else
-					m_dashDirection = transform.right * m_right;
+		if(m_forward <1)
+			m_forward += 1;
 
-				m_dashDistanceRun = 0f;
-				rigidbody.useGravity = false;
-				m_jumpDash ++;
-				break;
+		if(m_lastDirection == Direction.FORWARD && !m_doubleKeyTimer.IsElapsedLoop && m_dashDirection == Vector3.zero && !m_canJump)
+		{
+			StartDash(transform.forward);
+		}
+
+		m_lastDirection = Direction.FORWARD;
+		m_doubleKeyTimer.Reset(0.3f);
+	}
+
+	void Backward()
+	{
+		if(m_forward > -1)
+			m_forward -= 1;
+
+		if(m_lastDirection == Direction.BACKWARD && !m_doubleKeyTimer.IsElapsedLoop && m_dashDirection == Vector3.zero && !m_canJump)
+		{
+			StartDash(-transform.forward);
+		}
+		
+		m_lastDirection = Direction.BACKWARD;
+		m_doubleKeyTimer.Reset(0.3f);
+	}
+
+	void StrafeLeft()
+	{
+		if(m_right > -1)
+			m_right -= 1;
+
+		if(m_lastDirection == Direction.LEFT && !m_doubleKeyTimer.IsElapsedLoop && m_dashDirection == Vector3.zero && !m_canJump)
+		{
+			StartDash(-transform.right);
+		}
+		
+		m_lastDirection = Direction.LEFT;
+		m_doubleKeyTimer.Reset(0.3f);
+	}
+
+	void StrafeRight()
+	{
+		if(m_right < 1)
+			m_right += 1;
+
+		if(m_lastDirection == Direction.RIGHT && !m_doubleKeyTimer.IsElapsedLoop && m_dashDirection == Vector3.zero && !m_canJump)
+		{
+			StartDash(transform.right);
+		}
+		
+		m_lastDirection = Direction.RIGHT;
+		m_doubleKeyTimer.Reset(0.3f);
+	}
+
+	void StartDash(Vector3 direction)
+	{
+		if(m_dashTimer.IsElapsedLoop || _dashCooldown == 0)
+		{
+			m_dashDirection = direction;
+			m_dashDistanceRun = 0f;
+			rigidbody.velocity = Vector3.zero;
+			rigidbody.useGravity = false;
 		}
 	}
 
@@ -127,7 +188,7 @@ public class FPSController : MonoBehaviour {
 	void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.CompareTag("ground"))
-			m_jumpDash = 0;
+			m_canJump = true;
 
 		StopDash();
 		
