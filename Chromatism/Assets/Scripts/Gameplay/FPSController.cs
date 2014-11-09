@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 
+[AddComponentMenu("Gameplay/FPSController")]
 public class FPSController : MonoBehaviour {
 
 	// Constants
@@ -8,9 +9,10 @@ public class FPSController : MonoBehaviour {
 	public float _rotateSpeed;
 	public float _jumpForce;
 
-	//Refs
+	// Refs
 	public GameObject _camera;
 
+	// Movement members
 	private int m_forward;
 	private int m_right;
 	private bool m_ableToJump = true;
@@ -25,7 +27,8 @@ public class FPSController : MonoBehaviour {
 		KeyBinder.Instance.DefineActions("MouseX", new AxisActionConfig(KeyType.Head, 0, MouseX));
 		KeyBinder.Instance.DefineActions("MouseY", new AxisActionConfig(KeyType.Head, 0, MouseY));
 	}
-	
+
+	// applying movement
 	void FixedUpdate ()
 	{
 		if(m_forward != 0)
@@ -38,17 +41,20 @@ public class FPSController : MonoBehaviour {
 			transform.position += transform.right * (m_right * _moveSpeed * Time.deltaTime);
 		}
 	}
-	
+
+	// rotating camera left and right
 	void MouseX(float value)
 	{
 		transform.Rotate(Vector3.up * (value *_rotateSpeed * Time.deltaTime));
 	}
-	
+
+	//rotating camera up and down
 	void MouseY(float value)
 	{
 		_camera.transform.Rotate(Vector3.right * (-value * _rotateSpeed * Time.deltaTime));
 	}
 
+	// verifying if we can jump again
 	void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.CompareTag("ground"))
