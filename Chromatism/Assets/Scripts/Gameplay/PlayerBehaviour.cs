@@ -49,6 +49,8 @@ public class PlayerBehaviour : MonoBehaviour
 
 	private Ray m_aimingRay;
 
+	private int m_rayLayerMask;
+
 	#endregion
 
 	#region Public Properties
@@ -56,7 +58,7 @@ public class PlayerBehaviour : MonoBehaviour
 	public float _channel0Gain = 0.1f;
 	public float _channel1Gain = 0.1f;
 	public float _channel2Gain = 0.1f;
-	
+
 	#endregion
 
 	#region Properties
@@ -86,6 +88,8 @@ public class PlayerBehaviour : MonoBehaviour
 
 		m_aimingRay = new Ray();
 
+		m_rayLayerMask = ~(LayerMask.NameToLayer("Player"));
+
 		m_pawn = GetComponent<Pawn>();
 		m_properties = GetComponent<EntityProperties>();
 		m_weapon = GetComponentInChildren<Weapon>();
@@ -106,7 +110,7 @@ public class PlayerBehaviour : MonoBehaviour
 
 		RaycastHit hit;
 
-		if(Physics.Raycast(m_aimingRay,out hit))
+		if(Physics.Raycast(m_aimingRay,out hit,Mathf.Infinity,m_rayLayerMask))
 			m_aimingPoint = hit.point;
 		else
 			m_aimingPoint = Vector3.zero;
