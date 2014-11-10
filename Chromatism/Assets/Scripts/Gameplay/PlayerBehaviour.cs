@@ -94,6 +94,8 @@ public class PlayerBehaviour : MonoBehaviour
 		                                 new KeyActionConfig(KeyType.Action, 0,
 		                    			() => { m_weapon.StartShooting(); }, 
 										() => { m_weapon.StopShooting();  } ));
+
+		GPEventManager.Instance.Register("EnemyDied",OnEnemyDie);
 	}
 
 	void Update()
@@ -112,8 +114,10 @@ public class PlayerBehaviour : MonoBehaviour
 
 	#region Callbacks
 
-	public void OnEnemyDie(EnemyBehaviour enemy)
+	public void OnEnemyDie(string evtName,GPEvent evt)
 	{
+		EnemyBehaviour enemy = ((GameObjectEvent) evt)._object.GetComponent<EnemyBehaviour>();
+
 		Properties.ColorChannel0 += _channel0Gain * enemy._initChannel0;
 		Properties.ColorChannel1 += _channel1Gain * enemy._initChannel1;
 		Properties.ColorChannel2 += _channel2Gain * enemy._initChannel2;

@@ -96,11 +96,7 @@ public class EnemyBehaviour : MonoBehaviour
 
 	private void OnEnemyDie(Pawn pawn)
 	{
-		GameObject obj = GameObject.FindGameObjectWithTag("Player");
-
-		PlayerBehaviour player = obj.GetComponent<PlayerBehaviour>();
-
-		player.OnEnemyDie(this);
+		GPEventManager.Instance.Raise("EnemyDied",new GameObjectEvent(this.gameObject));
 	}
 
 	#endregion

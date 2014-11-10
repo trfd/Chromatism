@@ -32,6 +32,16 @@ public class GPEvent
 {
 }
 
+public class GameObjectEvent : GPEvent
+{
+	public GameObject _object;
+
+	public GameObjectEvent(GameObject obj)
+	{
+		this._object = obj;
+	}
+}
+
 public class GPEventManager : MonoBehaviour
 {
 	#region Singleton
