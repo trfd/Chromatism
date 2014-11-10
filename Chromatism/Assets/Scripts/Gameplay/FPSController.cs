@@ -120,6 +120,11 @@ public class FPSController : MonoBehaviour
 			float size = Mathf.Lerp(m_reticleSize + _reticlegrowth, m_reticleSize, m_hitmarkerTimer.CurrentNormalized);
 			_hitmarker.transform.localScale = Vector3.one * size;
 		}
+
+		if(m_hitmarkerTimer.IsElapsedLoop && _hitmarker.activeSelf == true)
+		{
+			_hitmarker.SetActive(false);
+		}
 	}
 
 	#endregion
@@ -225,6 +230,7 @@ public class FPSController : MonoBehaviour
 	void OnTouch( string evtName, GPEvent gpEvent)
 	{
 		m_hitmarkerTimer.Reset(0.1f);
+		_hitmarker.SetActive(true);
 	}
 
 	#endregion
