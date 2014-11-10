@@ -42,6 +42,8 @@ public class EnemyBehaviour : MonoBehaviour
 
 	#region Public Members
 
+	public ColorOrb _orbPrefab;
+
 	/// <summary>
 	/// Value of initialization for channel 0.
 	/// </summary>
@@ -97,6 +99,32 @@ public class EnemyBehaviour : MonoBehaviour
 	private void OnEnemyDie(Pawn pawn)
 	{
 		GPEventManager.Instance.Raise("EnemyDied",new GameObjectEvent(this.gameObject));
+
+		SpawnOrbs();
+	}
+
+	private void SpawnOrbs()
+	{
+		ColorOrb channel0Orb = (ColorOrb) GameObject.Instantiate(_orbPrefab,transform.position,transform.rotation);
+		ColorOrb channel1Orb = (ColorOrb) GameObject.Instantiate(_orbPrefab,transform.position,transform.rotation);
+		ColorOrb channel2Orb = (ColorOrb) GameObject.Instantiate(_orbPrefab,transform.position,transform.rotation);
+
+		channel0Orb._channel = Channel.CHANNEL_0;
+		channel1Orb._channel = Channel.CHANNEL_1;
+		channel2Orb._channel = Channel.CHANNEL_2;
+
+		channel0Orb.StationnaryLocation = transform.position + 
+			new Vector3(Random.Range(-1f,1f),Random.Range(-0.5f,0.5f),Random.Range(-1f,1f));
+
+		channel1Orb.StationnaryLocation = transform.position + 
+			new Vector3(Random.Range(-1f,1f),Random.Range(-0.5f,0.5f),Random.Range(-1f,1f));
+
+		channel2Orb.StationnaryLocation = transform.position +
+			new Vector3(Random.Range(-1f,1f),Random.Range(-0.5f,0.5f),Random.Range(-1f,1f));
+
+		channel0Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel0;
+		channel1Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel1;
+		channel2Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel2;
 	}
 
 	#endregion

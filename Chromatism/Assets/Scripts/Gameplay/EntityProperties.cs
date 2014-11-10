@@ -28,6 +28,13 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 
+public enum Channel
+{
+	CHANNEL_0	= 0,
+	CHANNEL_1	= 1,
+	CHANNEL_2	= 2
+}
+
 [AddComponentMenu("Gameplay/EntityProperties")]
 public class EntityProperties : MonoBehaviour
 {

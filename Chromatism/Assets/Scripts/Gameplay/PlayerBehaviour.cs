@@ -112,15 +112,37 @@ public class PlayerBehaviour : MonoBehaviour
 
 	#endregion
 
-	#region Callbacks
+	#region Event
 
 	public void OnEnemyDie(string evtName,GPEvent evt)
 	{
 		EnemyBehaviour enemy = ((GameObjectEvent) evt)._object.GetComponent<EnemyBehaviour>();
 
-		Properties.ColorChannel0 += _channel0Gain * enemy._initChannel0;
-		Properties.ColorChannel1 += _channel1Gain * enemy._initChannel1;
-		Properties.ColorChannel2 += _channel2Gain * enemy._initChannel2;
+		//Properties.ColorChannel0 += _channel0Gain * enemy._initChannel0;
+		//Properties.ColorChannel1 += _channel1Gain * enemy._initChannel1;
+		//Properties.ColorChannel2 += _channel2Gain * enemy._initChannel2;
+	}
+
+	#endregion
+
+	#region Public Interface
+
+	public void PickUpOrb(ColorOrb orb)
+	{
+		switch(orb._channel)
+		{
+		case Channel.CHANNEL_0:
+			Properties.ColorChannel0 += orb.ColorValue; 
+			break;
+		case Channel.CHANNEL_1:
+			Properties.ColorChannel1 += orb.ColorValue;
+			break;
+		case Channel.CHANNEL_2:
+			Properties.ColorChannel2 += orb.ColorValue;
+			break;
+		}
+
+		GPEventManager.Instance.Raise("PlayerPickOrb",new GPEvent());
 	}
 
 	#endregion

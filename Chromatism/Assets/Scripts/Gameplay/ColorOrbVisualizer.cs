@@ -1,5 +1,5 @@
 ﻿//
-// GameManager.cs
+// ColorOrbVisualizer.cs
 //
 // Author(s):
 //       Baptiste Dupy <baptiste.dupy@gmail.com>
@@ -27,48 +27,18 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameManager : MonoBehaviour
+[RequireComponent(typeof(ColorOrb))]
+public class ColorOrbVisualizer : MonoBehaviour
 {
-	#region Singleton
-	
-	private static GameManager m_instance;
-	
-	public static GameManager Instance
-	{
-		get
-		{
-			if(m_instance == null)
-			{
-				m_instance = GameObject.FindObjectOfType<GameManager>();
-				
-				DontDestroyOnLoad(m_instance.gameObject);
-			}
-			
-			return m_instance;
-		}
-	}
-	
-	void Awake() 
-	{
-		if(m_instance == null)
-		{
-			m_instance = this;
-			DontDestroyOnLoad(this);
-		}
-		else
-		{
-			if(this != m_instance)
-				Destroy(this.gameObject);
-		}
-	}
-	
-	#endregion 
+	#region Private Members
 
-	#region Public Member
+	private ColorOrb m_orb;
 
-	public float _enemyOrbLossChannel0;
-	public float _enemyOrbLossChannel1;
-	public float _enemyOrbLossChannel2;
+	#endregion
+
+	#region Public Members
+
+	//public float _colorBoost;
 
 	#endregion
 
@@ -76,7 +46,27 @@ public class GameManager : MonoBehaviour
 
 	void Start()
 	{
-		Screen.showCursor = false;
+		m_orb = GetComponent<ColorOrb>();
+	}
+
+	void Update()
+	{
+		Color c = Color.black;
+
+		switch(m_orb._channel)
+		{
+		case Channel.CHANNEL_0:
+			c.r = m_orb.ColorValue * 1f/GameManager.Instance._enemyOrbLossChannel0;
+			break;
+		case Channel.CHANNEL_1:
+			c.g = m_orb.ColorValue * 1f/GameManager.Instance._enemyOrbLossChannel1;
+			break;
+		case Channel.CHANNEL_2:
+			c.b = m_orb.ColorValue * 1f/GameManager.Instance._enemyOrbLossChannel2;
+			break;
+		}
+
+		renderer.material.color = c;
 	}
 
 	#endregion
