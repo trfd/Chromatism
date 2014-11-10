@@ -2,7 +2,8 @@
 using System.Collections;
 
 [AddComponentMenu("Gameplay/FPSController")]
-public class FPSController : MonoBehaviour {
+public class FPSController : MonoBehaviour 
+{
 
 	#region Members
 
@@ -13,6 +14,11 @@ public class FPSController : MonoBehaviour {
 	public float _dashDistance;
 	public float _dashSpeed;
 	public float _dashCooldown;
+
+	//reticle
+	public GameObject _reticle;
+	public GameObject _hitmarker;
+	public float _reticlegrowth;
 
 	// Refs
 	public GameObject _camera;
@@ -41,6 +47,15 @@ public class FPSController : MonoBehaviour {
 	private float m_dashDistanceRun = 0f;
 
 
+	//reticle
+	private float m_reticleSize = 0.01f;
+	private Timer m_reticleTimer;
+	private Timer m_hitmarkerTimer;
+	private float m_growthCooldown;
+
+	//Entity properties
+	private EntityProperties m_properties;
+
 	#endregion
 
 	#region MonoBehaviour
@@ -52,22 +67,28 @@ public class FPSController : MonoBehaviour {
 		KeyBinder.Instance.DefineActions("Backward", new KeyActionConfig(KeyType.Movement, 1, Backward, () => {m_forward += 1;}));
 		KeyBinder.Instance.DefineActions("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, StrafeLeft, () => {m_right += 1;}));
 		KeyBinder.Instance.DefineActions("StrafeRight", new KeyActionConfig(KeyType.Movement, 3, StrafeRight, () => {m_right -= 1;}));
-		KeyBinder.Instance.DefineActions("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, () => {if(m_canJump){rigidbody.AddForce(Vector3.up * _jumpForce);m_canJump = false;}}, null));
+		KeyBinder.Instance.DefineActions("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, () => {if(m_canJump){rigidbody.AddForce(Vector3.up * m_properties.Gravity);m_canJump = false;}}, null));
 		KeyBinder.Instance.DefineActions("MouseX", new AxisActionConfig(KeyType.Head, 0, MouseX));
 		KeyBinder.Instance.DefineActions("MouseY", new AxisActionConfig(KeyType.Head, 0, MouseY));
 
 		m_doubleKeyTimer = new Timer();
 		m_dashTimer = new Timer();
+		m_reticleTimer = new Timer();
+		m_hitmarkerTimer = new Timer();
+
+		m_properties = GetComponent<EntityProperties>();
+		GPEventManager.Instance.Register("WeaponShoot", Shoot);
+		GPEventManager.Instance.Register("EnemyTouched", OnTouch);
 	}
 
 	// applying movement
 	void FixedUpdate ()
 	{
-		if(m_dashDirection != null && m_dashDirection != Vector3.zero)
+		if(m_dashDirection != Vector3.zero)
 		{
-			transform.position += m_dashDirection * (_dashSpeed * Time.deltaTime);
-			m_dashDistanceRun += _dashSpeed * Time.deltaTime;
-			if(m_dashDistanceRun >= _dashDistance)
+			transform.position += m_dashDirection * (m_properties.EntityVelocity * 4 * Time.deltaTime);
+			m_dashDistanceRun += m_properties.EntityVelocity * 4 * Time.deltaTime;
+			if(m_dashDistanceRun >= m_properties.EntityDashRange)
 			{
 				m_dashTimer.Reset(_dashCooldown);
 				StopDash();
@@ -77,12 +98,27 @@ public class FPSController : MonoBehaviour {
 
 		if(m_forward != 0)
 		{
-			transform.position += transform.forward * (m_forward * _moveSpeed * Time.deltaTime);
+			transform.position += transform.forward * (m_forward * m_properties.EntityVelocity * Time.deltaTime);
 		}
 
 		if(m_right != 0)
 		{
-			transform.position += transform.right * (m_right * _moveSpeed * Time.deltaTime);
+			transform.position += transform.right * (m_right * m_properties.EntityVelocity * Time.deltaTime);
+		}
+	}
+
+	void Update()
+	{
+		if(_reticle != null)
+		{
+			float size = Mathf.Lerp(m_reticleSize + _reticlegrowth, m_reticleSize, 1 - m_reticleTimer.CurrentNormalized);
+			_reticle.transform.localScale = Vector3.one * size;
+		}
+		
+		if(_hitmarker != null && !m_hitmarkerTimer.IsElapsedLoop)
+		{
+			float size = Mathf.Lerp(m_reticleSize + _reticlegrowth, m_reticleSize, m_hitmarkerTimer.CurrentNormalized);
+			_hitmarker.transform.localScale = Vector3.one * size;
 		}
 	}
 
@@ -178,6 +214,17 @@ public class FPSController : MonoBehaviour {
 	void MouseY(float value)
 	{
 		_camera.transform.Rotate(Vector3.right * (-value * _rotateSpeed));
+	}
+
+
+	void Shoot( string evtName, GPEvent gpEvent)
+	{
+		m_reticleTimer.Reset( (1/m_properties.WeaponFireRate) );
+	} 
+
+	void OnTouch( string evtName, GPEvent gpEvent)
+	{
+		m_hitmarkerTimer.Reset(0.1f);
 	}
 
 	#endregion

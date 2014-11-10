@@ -8,7 +8,7 @@ public class Timer
     float _duration = 1.0f;
     float _startTime = Time.timeSinceLevelLoad;
 
-    public Timer() : this(1f, false)
+    public Timer() : this(0f, false)
     {
     }
 
