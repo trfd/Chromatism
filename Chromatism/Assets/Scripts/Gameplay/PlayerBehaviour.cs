@@ -90,6 +90,8 @@ public class PlayerBehaviour : MonoBehaviour
 		m_properties = GetComponent<EntityProperties>();
 		m_weapon = GetComponentInChildren<Weapon>();
 
+		m_pawn.OnPawnHit += OnPlayerHit;
+
 		KeyBinder.Instance.DefineActions("MouseLeftClick", 
 		                                 new KeyActionConfig(KeyType.Action, 0,
 		                    			() => { m_weapon.StartShooting(); }, 
@@ -113,6 +115,11 @@ public class PlayerBehaviour : MonoBehaviour
 	#endregion
 
 	#region Event
+
+	private void OnPlayerHit(Pawn pawn)
+	{
+		GPEventManager.Instance.Raise("PlayerTouched",new GPEvent());
+	}
 
 	public void OnEnemyDie(string evtName,GPEvent evt)
 	{

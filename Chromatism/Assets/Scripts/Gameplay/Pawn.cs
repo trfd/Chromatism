@@ -73,6 +73,11 @@ public class Pawn : MonoBehaviour
 	#endregion
 
 	#region Delegate
+	
+	public PawnDelegate OnPawnHit
+	{
+		get; set; 
+	}
 
 	public PawnDelegate OnPawnDie
 	{
@@ -132,18 +137,9 @@ public class Pawn : MonoBehaviour
 		{
 			Die();
 		}
+		else if(OnPawnHit != null)
+			OnPawnHit(this);
 	}
-
-	/*
-	[InspectorButton("Shoot",0.2f)]
-	private void MockHit(float damages)
-	{
-		Bullet bullet = new Bullet();
-		bullet.Owner   = GameObject.Find("Enemy");
-		bullet.Damages = damages;
-		HitByBullet(bullet);
-	}
-	*/
 
 	#endregion
 

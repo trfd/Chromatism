@@ -78,12 +78,15 @@ public class EnemyBehaviour : MonoBehaviour
 
 	#endregion
 
+	#region MonoBehaviour
+
 	void Start()
 	{
 		m_properties = GetComponent<EntityProperties>();
 		m_pawn = GetComponent<Pawn>();
 
 		m_pawn.OnPawnDie += OnEnemyDie;
+		m_pawn.OnPawnHit += OnEnemyHit;
 
 		m_properties.ColorChannel0 = _initChannel0;
 		m_properties.ColorChannel1 = _initChannel1;
@@ -93,6 +96,17 @@ public class EnemyBehaviour : MonoBehaviour
 	void Update()
 	{
 	}
+
+	#endregion
+
+	#region Events
+
+	private void OnEnemyHit(Pawn pawn)
+	{
+		GPEventManager.Instance.Raise("EnemyTouched",new GPEvent());
+	}
+
+	#endregion
 
 	#region Enemy Death
 
