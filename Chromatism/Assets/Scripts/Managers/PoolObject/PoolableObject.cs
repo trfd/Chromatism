@@ -20,12 +20,7 @@ public abstract class PoolableObject : MonoBehaviour
 			if(m_isPoolable == value)
 				return;
 
-
-			bool prevValue = m_isPoolable;
 			m_isPoolable = value;
-
-			// Note: m_isPoolable should have the correct
-			// value before calling callbacks.
 
 			if(m_isPoolable) 
 				OnPoolClear();
