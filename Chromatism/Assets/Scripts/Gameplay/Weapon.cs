@@ -88,6 +88,11 @@ public class Weapon : MonoBehaviour
 		get{ return m_remainingBullets; }
 	}
 
+	public bool IsReloading
+	{
+		get{ return (m_isReloading && !m_reloadTimer.IsElapsedLoop); }
+	}
+
 	#endregion
 
 
@@ -95,7 +100,7 @@ public class Weapon : MonoBehaviour
 
 	void Start()
 	{
-		m_shootTimer = new Timer();
+		m_shootTimer  = new Timer();
 		m_reloadTimer = new Timer();
 
 		m_owner = GetComponentInParent<Pawn>();
@@ -137,14 +142,12 @@ public class Weapon : MonoBehaviour
 	{
 		m_isInputShooting = input;
 	}
-
-	//[InspectorButton("Shoot")]
+	
 	public void StartShooting()
 	{
 		m_isInputShooting = true;
 	}
-
-	//[InspectorButton("Stop")]
+	
 	public void StopShooting()
 	{
 		m_isInputShooting = false;
@@ -159,7 +162,9 @@ public class Weapon : MonoBehaviour
 		m_isReloading = true;
 		m_reloadTimer.Reset(ReloadDuration);
 
-		Debug.Log("Start Reload");
+		m_isInputShooting = false;
+
+		GPEventManager.Instance.Raise("WeaponStartReload",new GPEvent());
 	}
 
 	private void EndReload()
@@ -167,7 +172,7 @@ public class Weapon : MonoBehaviour
 		m_isReloading = false;
 		m_remainingBullets = (int) m_properties.WeaponMagazineSize;
 
-		Debug.Log("End Reload");
+		GPEventManager.Instance.Raise("WeaponEndReload",new GPEvent());
 	}
 
 	private bool CanShoot()
@@ -215,6 +220,8 @@ public class Weapon : MonoBehaviour
 		newBullet.transform.localScale = m_properties.WeaponBulletSize * Vector3.one;
 
 		newBullet.SpawnAt(_bulletSpawnTransform.position);
+
+		GPEventManager.Instance.Raise("WeaponShoot",new GPEvent());
 	}
 
 	#endregion
