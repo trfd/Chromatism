@@ -90,16 +90,27 @@ public class PlayerBehaviour : MonoBehaviour
 
 		m_rayLayerMask = ~(LayerMask.NameToLayer("Player"));
 
+		// Get Components
+
 		m_pawn = GetComponent<Pawn>();
 		m_properties = GetComponent<EntityProperties>();
 		m_weapon = GetComponentInChildren<Weapon>();
 
+		// Register Delegates
+
 		m_pawn.OnPawnHit += OnPlayerHit;
+		m_weapon.OnWeaponShoot       += OnPlayerWeaponShoot;
+		m_weapon.OnWeaponStartReload += OnPlayerWeaponStartReload;
+		m_weapon.OnWeaponStopReload  += OnPlayerWeaponStopReload;
+
+		// Key Binding
 
 		KeyBinder.Instance.DefineActions("MouseLeftClick", 
 		                                 new KeyActionConfig(KeyType.Action, 0,
 		                    			() => { m_weapon.StartShooting(); }, 
 										() => { m_weapon.StopShooting();  } ));
+
+		// Event Registering
 
 		GPEventManager.Instance.Register("EnemyDied",OnEnemyDie);
 	}
@@ -114,6 +125,8 @@ public class PlayerBehaviour : MonoBehaviour
 			m_aimingPoint = hit.point;
 		else
 			m_aimingPoint = Vector3.zero;
+
+		m_pawn.AimingPoint = m_aimingPoint;
 	}
 
 	#endregion
@@ -123,6 +136,21 @@ public class PlayerBehaviour : MonoBehaviour
 	private void OnPlayerHit(Pawn pawn)
 	{
 		GPEventManager.Instance.Raise("PlayerTouched",new GPEvent());
+	}
+
+	private void OnPlayerWeaponShoot(Weapon weapon)
+	{
+		GPEventManager.Instance.Raise("PlayerWeaponShoot", new GPEvent());
+	}
+	
+	private void OnPlayerWeaponStartReload(Weapon weapon)
+	{
+		GPEventManager.Instance.Raise("PlayerWeaponStartReload", new GPEvent());
+	}
+
+	private void OnPlayerWeaponStopReload(Weapon weapon)
+	{
+		GPEventManager.Instance.Raise("PlayerWeaponStopReload", new GPEvent());
 	}
 
 	public void OnEnemyDie(string evtName,GPEvent evt)

@@ -232,5 +232,8 @@ public class EntityPropertiesInspector : Editor
 		{
 			entityProperties.SetChannelBindings();
 		}
+
+		if (GUI.changed)
+			EditorUtility.SetDirty(entityProperties);
 	}
 }

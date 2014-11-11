@@ -85,8 +85,19 @@ public class EnemyBehaviour : MonoBehaviour
 		m_properties = GetComponent<EntityProperties>();
 		m_pawn = GetComponent<Pawn>();
 
+		Weapon weapon = GetComponent<Weapon>();
+
+		// Register Delegates
+
 		m_pawn.OnPawnDie += OnEnemyDie;
 		m_pawn.OnPawnHit += OnEnemyHit;
+
+		if(weapon != null)
+		{
+			weapon.OnWeaponShoot       += OnEnemyWeaponShoot;
+			weapon.OnWeaponStartReload += OnEnemyWeaponStartReload;
+			weapon.OnWeaponStartReload += OnEnemyWeaponStopReload;
+		}
 
 		m_properties.ColorChannel0 = _initChannel0;
 		m_properties.ColorChannel1 = _initChannel1;
@@ -139,6 +150,25 @@ public class EnemyBehaviour : MonoBehaviour
 		channel0Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel0;
 		channel1Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel1;
 		channel2Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel2;
+	}
+
+	#endregion
+
+	#region Delegate
+
+	private void OnEnemyWeaponShoot(Weapon weapon)
+	{
+		GPEventManager.Instance.Raise("EnemyWeaponShoot",new GPEvent());
+	}
+
+	private void OnEnemyWeaponStartReload(Weapon weapon)
+	{
+		GPEventManager.Instance.Raise("EnemyWeaponStartReload",new GPEvent());
+	}
+
+	private void OnEnemyWeaponStopReload(Weapon weapon)
+	{
+		GPEventManager.Instance.Raise("EnemyWeaponStopReload",new GPEvent());
 	}
 
 	#endregion

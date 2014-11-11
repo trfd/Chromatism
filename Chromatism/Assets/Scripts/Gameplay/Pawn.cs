@@ -43,7 +43,7 @@ public class Pawn : MonoBehaviour
 
 	#region Protected Members
 
-	protected Vector3 m_aimingPoint;
+	private Vector3 m_aimingPoint;
 
 	#endregion
 
@@ -67,7 +67,8 @@ public class Pawn : MonoBehaviour
 
 	public Vector3 AimingPoint
 	{
-		get{ return m_aimingPoint; }
+		get{ return m_aimingPoint;  }
+		set{ m_aimingPoint = value; }
 	}
 
 	#endregion

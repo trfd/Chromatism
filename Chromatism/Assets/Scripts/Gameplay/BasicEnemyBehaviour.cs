@@ -51,6 +51,11 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	[InspectorLabel()]
 	private State m_currState;
 
+	/// <summary>
+	/// Weapon held by enemy.
+	/// </summary>
+	private Weapon m_weapon;
+
 	#endregion
 
 	#region Public Members
@@ -86,6 +91,8 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	{
 		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
 		m_aiTimer = new Timer(1f / _aiUpdateFrequency);
+
+		m_weapon = GetComponentInChildren<Weapon>();
 
 		InitVisionCone();
 	}
@@ -149,6 +156,9 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	private void UpdateAttack()
 	{
 		LookAt(m_player.transform.position);
+		AimAtPlayer();
+
+		Shoot();
 	}
 
 	private void LookAt(Vector3 position)
@@ -158,6 +168,13 @@ public class BasicEnemyBehaviour : MonoBehaviour
 		float angle = Mathf.Atan2(localRel.x,localRel.z);
 
 		transform.Rotate(Vector3.up, Mathf.Min(Time.deltaTime * _maxRotateSpeed, angle * Mathf.Rad2Deg));
+	}
+
+	private void AimAtPlayer()
+	{
+		m_weapon.Owner.AimingPoint = m_player.transform.position;
+
+		// TODO: introduce offset
 	}
 
 	#endregion
@@ -181,6 +198,11 @@ public class BasicEnemyBehaviour : MonoBehaviour
 		float angle = Mathf.Atan2(localRel.x,localRel.z);
 
 		return (Mathf.Abs(angle) < _coneViewAngle * Mathf.Deg2Rad);
+	}
+	
+	private void Shoot()
+	{
+		m_weapon.ShootInput(true);
 	}
 
 	#endregion

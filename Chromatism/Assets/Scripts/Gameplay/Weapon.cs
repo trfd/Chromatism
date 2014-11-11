@@ -3,6 +3,12 @@ using System.Collections;
 
 public class Weapon : MonoBehaviour 
 {
+	#region Delegate Decl.
+
+	public delegate void WeaponEvent(Weapon weapon);
+
+	#endregion
+
 	#region Private Members
 
 	/// <summary>
@@ -50,6 +56,14 @@ public class Weapon : MonoBehaviour
 	/// Location used to spawn bullets.
 	/// </summary>
 	public Transform _bulletSpawnTransform;
+
+	#endregion
+
+	#region Delegate
+
+	public WeaponEvent OnWeaponShoot;
+	public WeaponEvent OnWeaponStartReload;
+	public WeaponEvent OnWeaponStopReload;
 
 	#endregion
 
@@ -164,7 +178,8 @@ public class Weapon : MonoBehaviour
 
 		m_isInputShooting = false;
 
-		GPEventManager.Instance.Raise("WeaponStartReload",new GPEvent());
+		if(OnWeaponStartReload != null)
+			OnWeaponStartReload(this);
 	}
 
 	private void EndReload()
@@ -172,7 +187,8 @@ public class Weapon : MonoBehaviour
 		m_isReloading = false;
 		m_remainingBullets = (int) m_properties.WeaponMagazineSize;
 
-		GPEventManager.Instance.Raise("WeaponEndReload",new GPEvent());
+		if(OnWeaponStopReload != null)
+			OnWeaponStopReload(this);
 	}
 
 	private bool CanShoot()
@@ -221,7 +237,8 @@ public class Weapon : MonoBehaviour
 
 		newBullet.SpawnAt(_bulletSpawnTransform.position);
 
-		GPEventManager.Instance.Raise("WeaponShoot",new GPEvent());
+		if(OnWeaponShoot != null)
+			OnWeaponShoot(this);
 	}
 
 	#endregion
