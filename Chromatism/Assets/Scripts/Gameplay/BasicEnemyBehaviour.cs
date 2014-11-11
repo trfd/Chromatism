@@ -60,6 +60,10 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	#region Public Members
 
+	public PatrolState _patrolState;
+
+	public float _patrolSpeed;
+
 	/// <summary>
 	/// The update frequency of AI.
 	/// </summary>
@@ -126,6 +130,9 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	private void UpdateState()
 	{
+		UpdatePatrol();
+		return;
+
 		switch(m_currState)
 		{
 		case State.REST:
@@ -150,7 +157,10 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	private void UpdatePatrol()
 	{
-
+		if(_patrolState == null || _patrolState._patrol == null)
+			return;
+	
+		_patrolState._patrol.Move(this.gameObject,ref _patrolState);
 	}
 
 	private void UpdateAttack()
