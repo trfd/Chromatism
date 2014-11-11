@@ -77,7 +77,7 @@ public class FPSController : MonoBehaviour
 		m_hitmarkerTimer = new Timer();
 
 		m_properties = GetComponent<EntityProperties>();
-		GPEventManager.Instance.Register("WeaponShoot", Shoot);
+		GPEventManager.Instance.Register("PlayerWeaponShoot", Shoot);
 		GPEventManager.Instance.Register("EnemyTouched", OnTouch);
 	}
 
@@ -212,13 +212,26 @@ public class FPSController : MonoBehaviour
 	// rotating camera left and right
 	void MouseX(float value)
 	{
-		transform.Rotate(Vector3.up * (value *_rotateSpeed));
+		transform.Rotate(Vector3.up, (value *_rotateSpeed));
 	}
 
 	//rotating camera up and down
 	void MouseY(float value)
 	{
-		_camera.transform.Rotate(Vector3.right * (-value * _rotateSpeed));
+		Vector3 currEuler = _camera.transform.localRotation.eulerAngles;
+		currEuler.x += (-value * _rotateSpeed);
+
+		if( currEuler.x > 90 && currEuler.x < 180 )
+		{
+			currEuler.x = 90f;
+		}
+
+		if( currEuler.x > 180 && currEuler.x < 270)
+		{
+			currEuler.x = 270;
+		}
+			_camera.transform.localRotation = Quaternion.Euler(currEuler);		
+		//_camera.transform.Rotate(Vector3.right, (-value * _rotateSpeed));
 	}
 
 
