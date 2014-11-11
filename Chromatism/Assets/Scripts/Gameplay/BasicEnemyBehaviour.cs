@@ -60,6 +60,8 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	/// </summary>
 	public float _aiUpdateFrequency;
 
+	public float _closeAwarnessRadius;
+
 	public float _coneViewAngle;
 
 	public float _coneViewRange;
@@ -163,6 +165,9 @@ public class BasicEnemyBehaviour : MonoBehaviour
 		Vector3 rel = m_player.transform.position - transform.position;
 
 		rel.y = 0;
+
+		if(rel.magnitude < _closeAwarnessRadius)
+			return true;
 
 		if(rel.magnitude >= _coneViewRange)
 			return false;

@@ -55,7 +55,8 @@ public class VisionConeMesh : MonoBehaviour
 			return;
 		}
 
-		float deltaAngle = 2f*m_enemyBehaviour._coneViewAngle / m_meshPrecision;
+		float deltaAngle = 2f * m_enemyBehaviour._coneViewAngle / m_meshPrecision;
+		float deltaCloseAwAngle = 360f / m_meshPrecision - deltaAngle;
 
 		Mesh newMesh = new Mesh();
 
@@ -67,6 +68,8 @@ public class VisionConeMesh : MonoBehaviour
 
 		Vector3 tmp1 = Vector3.zero;
 
+		// Vision cone vertices
+
 		for(float angle = -m_enemyBehaviour._coneViewAngle ; 
 		    angle<m_enemyBehaviour._coneViewAngle+deltaAngle ;
 		    angle += deltaAngle)
@@ -77,11 +80,34 @@ public class VisionConeMesh : MonoBehaviour
 			vertices.Add(tmp1);
 		}
 
+		// Close awarness vertices
+
+		for(float angle= m_enemyBehaviour._coneViewAngle ;
+		    angle <= 360f - m_enemyBehaviour._coneViewAngle + deltaCloseAwAngle ;
+		    angle += deltaCloseAwAngle)
+		{
+			tmp1.x = m_enemyBehaviour._closeAwarnessRadius * Mathf.Sin(angle*Mathf.Deg2Rad);
+			tmp1.z = m_enemyBehaviour._closeAwarnessRadius * Mathf.Cos(angle*Mathf.Deg2Rad);
+			
+			vertices.Add(tmp1);
+		}
+
 		// Create triangles and normals
 
 		List<int> triangles = new List<int>();
 
+			// Vision Cone
+
 		for(int idx= 0 ; idx <= m_meshPrecision ; idx++)
+		{
+			triangles.Add(0);
+			triangles.Add(idx);
+			triangles.Add(idx+1);
+		}
+
+			// Close awarness
+
+		for(int idx= m_meshPrecision+1 ; idx < 2f*(m_meshPrecision+1) ; idx++)
 		{
 			triangles.Add(0);
 			triangles.Add(idx);
@@ -92,6 +118,8 @@ public class VisionConeMesh : MonoBehaviour
 
 		newMesh.vertices = vertices.ToArray();
 		newMesh.triangles = triangles.ToArray();
+
+		newMesh.uv = new Vector2[newMesh.vertexCount];
 
 		newMesh.RecalculateNormals();
 
