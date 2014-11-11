@@ -61,7 +61,7 @@ public class GameManager : MonoBehaviour
 				Destroy(this.gameObject);
 		}
 	}
-	
+
 	#endregion 
 
 	#region Public Member
@@ -76,7 +76,7 @@ public class GameManager : MonoBehaviour
 
 	void Start()
 	{
-		Screen.showCursor = false;
+		Screen.lockCursor = true;
 	}
 
 	#endregion		
