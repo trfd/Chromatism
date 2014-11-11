@@ -142,16 +142,16 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	private void UpdateAttack()
 	{
-		AimAtPlayer();
+		LookAt(m_player.transform.position);
 	}
 
-	private void AimAtPlayer()
+	private void LookAt(Vector3 position)
 	{
-		Vector3 localRel = transform.InverseTransformPoint( m_player.transform.position);
+		Vector3 localRel = transform.InverseTransformPoint(position);
 
 		float angle = Mathf.Atan2(localRel.x,localRel.z);
 
-		transform.Rotate(Vector3.up,angle * Mathf.Rad2Deg);
+		transform.Rotate(Vector3.up, Mathf.Min(Time.deltaTime * _maxRotateSpeed, angle * Mathf.Rad2Deg));
 	}
 
 	#endregion
@@ -167,7 +167,26 @@ public class BasicEnemyBehaviour : MonoBehaviour
 		if(rel.magnitude >= _coneViewRange)
 			return false;
 
-		return (Mathf.Abs(Vector3.Angle(rel,transform.forward)) < _coneViewRange);
+		Vector3 localRel = transform.InverseTransformPoint(m_player.transform.position);
+		
+		float angle = Mathf.Atan2(localRel.x,localRel.z);
+
+		return (Mathf.Abs(angle) < _coneViewAngle * Mathf.Deg2Rad);
+	}
+
+	#endregion
+
+	#region Debug
+
+	[InspectorButton("Generate Vision Cone")]
+	void GenerateVisionCone()
+	{
+		VisionConeMesh mesh = GetComponentInChildren<VisionConeMesh>();
+
+		if(mesh == null)
+			return;
+
+		mesh.GenerateMesh();
 	}
 
 	#endregion
