@@ -79,5 +79,5 @@ public class GameManager : MonoBehaviour
 		Screen.showCursor = false;
 	}
 
-	#endregion
+	#endregion		
 }

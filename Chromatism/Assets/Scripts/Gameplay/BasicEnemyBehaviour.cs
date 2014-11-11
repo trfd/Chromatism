@@ -68,6 +68,8 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	public float _maxRotateSpeed;
 
+	public bool _showVisionCone;
+
 	#endregion
 
 	#region Properties
@@ -84,6 +86,8 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	{
 		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
 		m_aiTimer = new Timer(1f / _aiUpdateFrequency);
+
+		InitVisionCone();
 	}
 
 	void Update()
@@ -183,8 +187,22 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	#region Debug
 
+	private void InitVisionCone()
+	{
+		VisionConeMesh mesh = GetComponentInChildren<VisionConeMesh>();
+		
+		if(mesh == null)
+			return;
+		
+		if(!_showVisionCone && Application.isEditor)
+			mesh.gameObject.SetActive(false);
+		
+		if(!Application.isEditor)
+			Destroy(mesh.gameObject);
+	}
+
 	[InspectorButton("Generate Vision Cone")]
-	void GenerateVisionCone()
+	private void GenerateVisionCone()
 	{
 		VisionConeMesh mesh = GetComponentInChildren<VisionConeMesh>();
 
