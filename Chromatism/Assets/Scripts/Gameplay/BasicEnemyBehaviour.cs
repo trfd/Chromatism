@@ -27,6 +27,7 @@
 using UnityEngine;
 using System.Collections;
 
+[RequireComponent(typeof(Pawn))]
 public class BasicEnemyBehaviour : MonoBehaviour
 {
 	public enum State
@@ -37,6 +38,8 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	}
 
 	#region Private Members
+
+	private Pawn m_pawn;
 
 	private PlayerBehaviour m_player; 
 
@@ -93,6 +96,8 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	void Start()
 	{
+		m_pawn = GetComponent<Pawn>();
+
 		m_player = GameObject.FindGameObjectWithTag("Player").GetComponent<PlayerBehaviour>();
 		m_aiTimer = new Timer(1f / _aiUpdateFrequency);
 
@@ -118,9 +123,14 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	private void UpdateAI()
 	{
+		if(m_pawn.IsDead)
+			return;
+
 		if(IsSeeingPlayer())
 			m_currState = State.ATTACK;
-		else
+		else if(_patrolState._patrol != null)
+			m_currState = State.PATROL;
+		else 
 			m_currState = State.REST;
 	}
 
@@ -130,9 +140,6 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	private void UpdateState()
 	{
-		UpdatePatrol();
-		return;
-
 		switch(m_currState)
 		{
 		case State.REST:
@@ -152,7 +159,6 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	private void UpdateRest()
 	{
-
 	}
 
 	private void UpdatePatrol()

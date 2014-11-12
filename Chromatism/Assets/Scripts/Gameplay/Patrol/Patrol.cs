@@ -158,6 +158,8 @@ public class Patrol : MonoBehaviour
 
 		MoveGameObject(gameObject,state);
 
+		RotateGameObject(gameObject,state);
+
 		return _patrolPoints[state._targetPatrolPointIndex].transform.position;
 	}
 
@@ -184,6 +186,15 @@ public class Patrol : MonoBehaviour
 		if(_ignoreY) vel.y = obj.rigidbody.velocity.y;
 
 		obj.rigidbody.velocity = vel;
+	}
+
+	private void RotateGameObject(GameObject obj , PatrolState state)
+	{
+		Vector3 pos = _patrolPoints[state._targetPatrolPointIndex].transform.position;
+
+		pos.y = obj.transform.position.y;
+
+		obj.transform.LookAt(pos);
 	}
 
 	#endregion
