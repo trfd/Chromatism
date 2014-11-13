@@ -136,6 +136,7 @@ public class PlayerBehaviour : MonoBehaviour
 	private void OnPlayerHit(Pawn pawn)
 	{
 		GPEventManager.Instance.Raise("PlayerTouched",new GPEvent());
+        Fabric.EventManager.Instance.PostEvent("player_hurt", gameObject);
 	}
 
 	private void OnPlayerWeaponShoot(Weapon weapon)
