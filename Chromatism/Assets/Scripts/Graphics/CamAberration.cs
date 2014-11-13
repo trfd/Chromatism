@@ -55,14 +55,20 @@ public class CamAberration : MonoBehaviour
 		m_blueCoefID  = Shader.PropertyToID("_BlueCoef");
 
 		GPEventManager.Instance.Register("PlayerTouched",OnPlayerTouched);
+
+
+
 	}
 
 	void Update()
 	{
+		_material.SetFloat(m_redCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel0));
+		_material.SetFloat(m_greenCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel1));
+		_material.SetFloat(m_blueCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel2));
+
 		if(m_isAnimating && !m_animTimer.IsElapsedLoop)
 		{
 			float value = _hitCoefAnimation.Evaluate(1.0f-m_animTimer.CurrentNormalized);
-			Debug.Log(m_animTimer.CurrentNormalized);
 			_material.SetFloat(m_coefID,value);
 		}
 
@@ -71,7 +77,6 @@ public class CamAberration : MonoBehaviour
 			m_isAnimating = false;
 			_material.SetFloat(m_coefID,0);
 		}
-
 	}
 
 	void OnRenderImage(RenderTexture src, RenderTexture dest)
@@ -82,6 +87,11 @@ public class CamAberration : MonoBehaviour
 	void OnPlayerTouched(string str, GPEvent evt)
 	{
 		StartAnim();
+
+		_material.SetFloat(m_redCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel0));
+		_material.SetFloat(m_greenCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel1));
+		_material.SetFloat(m_blueCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel2));
+
 	}
 
 	[InspectorButton("Test Anim")]

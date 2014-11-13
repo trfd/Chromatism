@@ -124,7 +124,10 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	private void UpdateAI()
 	{
 		if(m_pawn.IsDead)
+		{
+			m_currState = State.REST;
 			return;
+		}
 
 		if(IsSeeingPlayer())
 			m_currState = State.ATTACK;
