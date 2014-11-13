@@ -175,6 +175,7 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	private void UpdateAttack()
 	{
 		LookAt(m_player.transform.position);
+		MoveForward();
 		AimAtPlayer();
 
 		Shoot();
@@ -194,6 +195,11 @@ public class BasicEnemyBehaviour : MonoBehaviour
 		m_weapon.Owner.AimingPoint = m_player.transform.position;
 
 		// TODO: introduce offset
+	}
+
+	private void MoveForward()
+	{
+		rigidbody.velocity = transform.forward * m_pawn.Properties.EntityVelocity;
 	}
 
 	#endregion

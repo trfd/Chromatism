@@ -48,11 +48,6 @@ public class Weapon : MonoBehaviour
 	#region Public Member
 
 	/// <summary>
-	/// Bullet pool used to get bullets.
-	/// </summary>
-	public Pool _bulletPool;
-
-	/// <summary>
 	/// Location used to spawn bullets.
 	/// </summary>
 	public Transform _bulletSpawnTransform;
@@ -222,7 +217,7 @@ public class Weapon : MonoBehaviour
 
 	private void ShootBullet()
 	{
-		Bullet newBullet = (Bullet) _bulletPool.GetUnusedObject();
+		Bullet newBullet = (Bullet) GameManager.Instance._bulletPool.GetUnusedObject();
 
 		if(newBullet == null)
 		{

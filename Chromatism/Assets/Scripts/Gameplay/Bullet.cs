@@ -31,6 +31,8 @@ public class Bullet : PoolableObject
 {
 	#region Private Members
 
+	private Renderer m_renderer;
+
 	/// <summary>
 	/// Starting Point of bullet.
 	/// </summary>
@@ -82,6 +84,7 @@ public class Bullet : PoolableObject
 
 	void Start()
 	{
+		m_renderer = GetComponentInChildren<Renderer>();
 		OnPoolClear();
 	}
 
@@ -96,6 +99,8 @@ public class Bullet : PoolableObject
 			OutOfRange();
 		else
 			transform.position += Time.deltaTime * Velocity;
+
+		transform.rotation =  Quaternion.LookRotation(Velocity);
 	}
 
 	void OnCollisionEnter(Collision coll)
@@ -128,7 +133,7 @@ public class Bullet : PoolableObject
 	public override void OnPoolInit()
 	{
 		collider.enabled = true;
-		renderer.enabled = true;
+		m_renderer.enabled = true;
 		this.enabled = true;
 
 		m_isUsed = false;
@@ -149,7 +154,7 @@ public class Bullet : PoolableObject
 		Velocity = Vector3.zero;
 
 		collider.enabled = false;
-		renderer.enabled = false;
+		m_renderer.enabled = false;
 		this.enabled = false;
 		rigidbody.Sleep();
 	}
