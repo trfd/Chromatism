@@ -205,6 +205,7 @@ public class Weapon : MonoBehaviour
 		m_remainingBullets--;
 
 		ShootBullet();
+		Fabric.EventManager.Instance.PostEvent("weapon_shoot",gameObject);
 
 		if(m_remainingBullets == 0)
 			StartReload();
