@@ -257,6 +257,7 @@ public class FPSController : MonoBehaviour
 			m_canJump = true;
 
 		StopDash();
+		rigidbody.velocity = Vector3.zero;
 		
 	}
 
