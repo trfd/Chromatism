@@ -180,6 +180,8 @@ public class Weapon : MonoBehaviour
 
 		if(OnWeaponStartReload != null)
 			OnWeaponStartReload(this);
+
+		Fabric.EventManager.Instance.PostEvent ("Overheating", gameObject);
 	}
 
 	private void EndReload()
