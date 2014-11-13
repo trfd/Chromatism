@@ -224,6 +224,7 @@ public class FPSController : MonoBehaviour
 	void Shoot( string evtName, GPEvent gpEvent)
 	{
 		m_reticleTimer.Reset( (1/m_properties.WeaponFireRate) );
+		_weaponAnimator.SetTrigger("Shoot");
 	} 
 	
 	#endregion
