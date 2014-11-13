@@ -17,8 +17,8 @@ public class FPSController : MonoBehaviour
 
 	//reticle
 	public GameObject _reticle;
-	public GameObject _hitmarker;
 	public float _reticlegrowth;
+	public float _reticleSize = 0.01f;
 
 	// Refs
 	public GameObject _camera;
@@ -48,9 +48,7 @@ public class FPSController : MonoBehaviour
 
 
 	//reticle
-	private float m_reticleSize = 0.01f;
 	private Timer m_reticleTimer;
-	private Timer m_hitmarkerTimer;
 	private float m_growthCooldown;
 
 	//Entity properties
@@ -74,11 +72,9 @@ public class FPSController : MonoBehaviour
 		m_doubleKeyTimer = new Timer();
 		m_dashTimer = new Timer();
 		m_reticleTimer = new Timer();
-		m_hitmarkerTimer = new Timer();
 
 		m_properties = GetComponent<EntityProperties>();
 		GPEventManager.Instance.Register("PlayerWeaponShoot", Shoot);
-		GPEventManager.Instance.Register("EnemyTouched", OnTouch);
 	}
 
 	// applying movement
@@ -111,19 +107,8 @@ public class FPSController : MonoBehaviour
 	{
 		if(_reticle != null)
 		{
-			float size = Mathf.Lerp(m_reticleSize + _reticlegrowth, m_reticleSize, 1 - m_reticleTimer.CurrentNormalized);
+			float size = Mathf.Lerp(_reticleSize + _reticlegrowth, _reticleSize, 1 - m_reticleTimer.CurrentNormalized);
 			_reticle.transform.localScale = Vector3.one * size;
-		}
-		
-		if(_hitmarker != null && !m_hitmarkerTimer.IsElapsedLoop)
-		{
-			float size = Mathf.Lerp(m_reticleSize + _reticlegrowth, m_reticleSize, m_hitmarkerTimer.CurrentNormalized);
-			_hitmarker.transform.localScale = Vector3.one * size;
-		}
-
-		if(m_hitmarkerTimer.IsElapsedLoop && _hitmarker.activeSelf == true)
-		{
-			_hitmarker.SetActive(false);
 		}
 	}
 
@@ -239,13 +224,7 @@ public class FPSController : MonoBehaviour
 	{
 		m_reticleTimer.Reset( (1/m_properties.WeaponFireRate) );
 	} 
-
-	void OnTouch( string evtName, GPEvent gpEvent)
-	{
-		m_hitmarkerTimer.Reset(0.1f);
-		_hitmarker.SetActive(true);
-	}
-
+	
 	#endregion
 
 	#region Collision

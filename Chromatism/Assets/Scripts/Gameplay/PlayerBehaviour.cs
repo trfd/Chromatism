@@ -99,6 +99,8 @@ public class PlayerBehaviour : MonoBehaviour
 		// Register Delegates
 
 		m_pawn.OnPawnHit += OnPlayerHit;
+		m_pawn.OnPawnDie += OnPlayerDie;
+
 		m_weapon.OnWeaponShoot       += OnPlayerWeaponShoot;
 		m_weapon.OnWeaponStartReload += OnPlayerWeaponStartReload;
 		m_weapon.OnWeaponStopReload  += OnPlayerWeaponStopReload;
@@ -133,9 +135,15 @@ public class PlayerBehaviour : MonoBehaviour
 
 	#region Event
 
+	private void OnPlayerDie(Pawn pawn)
+	{
+		GPEventManager.Instance.Raise("PlayerDied",new GPEvent());
+	}
+
 	private void OnPlayerHit(Pawn pawn)
 	{
 		GPEventManager.Instance.Raise("PlayerTouched",new GPEvent());
+        Fabric.EventManager.Instance.PostEvent("player_hurt", gameObject);
 	}
 
 	private void OnPlayerWeaponShoot(Weapon weapon)
@@ -155,11 +163,6 @@ public class PlayerBehaviour : MonoBehaviour
 
 	public void OnEnemyDie(string evtName,GPEvent evt)
 	{
-		EnemyBehaviour enemy = ((GameObjectEvent) evt)._object.GetComponent<EnemyBehaviour>();
-
-		//Properties.ColorChannel0 += _channel0Gain * enemy._initChannel0;
-		//Properties.ColorChannel1 += _channel1Gain * enemy._initChannel1;
-		//Properties.ColorChannel2 += _channel2Gain * enemy._initChannel2;
 	}
 
 	#endregion

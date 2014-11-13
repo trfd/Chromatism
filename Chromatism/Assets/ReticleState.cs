@@ -1,5 +1,5 @@
 ﻿//
-// GameManager.cs
+// ReticleState.cs
 //
 // Author(s):
 //       Baptiste Dupy <baptiste.dupy@gmail.com>
@@ -27,67 +27,22 @@
 using UnityEngine;
 using System.Collections;
 
-public class GameManager : MonoBehaviour
+[RequireComponent(typeof(Animator))]
+public class ReticleState : MonoBehaviour
 {
-	#region Singleton
-	
-	private static GameManager m_instance;
-	
-	public static GameManager Instance
-	{
-		get
-		{
-			if(m_instance == null)
-			{
-				m_instance = GameObject.FindObjectOfType<GameManager>();
-				//DontDestroyOnLoad(m_instance.gameObject);
-			}
-			
-			return m_instance;
-		}
-	}
-	
-	void Awake() 
-	{
-		if(m_instance == null)
-		{
-			m_instance = this;
-			//DontDestroyOnLoad(this);
-		}
-		else
-		{
-			if(this != m_instance)
-				Destroy(this.gameObject);
-		}
-	}
-
-	#endregion 
-
-	#region Public Member
-
-	public float _enemyOrbLossChannel0;
-	public float _enemyOrbLossChannel1;
-	public float _enemyOrbLossChannel2;
-
-	#endregion
-
-	#region MonoBehaviour
+	private Animator m_animator;
 
 	void Start()
 	{
-		Screen.lockCursor = true;
+		m_animator = GetComponent<Animator>();
 
-		GPEventManager.Instance.Register("RestartLevel",OnPlayerDied);
+		GPEventManager.Instance.Register("EnemyTouched",OnEnemyHit);
+		GPEventManager.Instance.Register("EnemyDied",OnEnemyHit);
+
 	}
 
-	#endregion		
-
-	#region Events
-
-	private void OnPlayerDied(string evtName, GPEvent evt)
+	void OnEnemyHit(string evtName, GPEvent evt)
 	{
-
+		m_animator.SetTrigger("Hit");
 	}
-
-	#endregion
 }
