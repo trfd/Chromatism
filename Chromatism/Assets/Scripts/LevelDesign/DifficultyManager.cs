@@ -40,6 +40,11 @@ public class DifficultyManager : MonoBehaviour {
 		set{ m_level = value; }
 	}
 
+	public int Kills
+	{
+		get{return m_currentKills;}
+	}
+
 	#endregion
 
 
@@ -57,7 +62,7 @@ public class DifficultyManager : MonoBehaviour {
 	void OnKill( string evtName, GPEvent gpEvent)
 	{
 		m_currentKills++;
-		if(m_currentKills >= (m_killForLevelUp + m_levelUpCoef * m_level) && m_level <= m_maxLevel)
+		if(m_currentKills >= ((m_killForLevelUp + m_levelUpCoef) * m_level) && m_level <= m_maxLevel)
 		{
 			m_level++;
 		}
@@ -71,6 +76,11 @@ public class DifficultyManager : MonoBehaviour {
 		m_maxLevel = 666;
 		m_level = 0;
 	}
+
+	public void AdjustPropertiesToDifficulty( ref EnemyBehaviour enemy)
+	{
+
+	} 
 	
 	#endregion
 }

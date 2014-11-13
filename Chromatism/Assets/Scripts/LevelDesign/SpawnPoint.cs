@@ -54,11 +54,19 @@ public class SpawnPoint : MonoBehaviour {
 	{
 		if(_patrol == null || _enemyPrefab == null)
 		{
-			Debug.Log("Ref should be assign motha fucka !");
+			Debug.LogError("Ref should be assign motha fucka !");
 			return;
 		}
 
 		var enemySpawned = GameObject.Instantiate(_enemyPrefab, transform.position, Quaternion.identity) as GameObject;
+		var enemyB = enemySpawned.GetComponent<BasicEnemyBehaviour>();
+		if(enemyB == null)
+		{
+			Debug.LogError("Enemy should have BasicEnemyBehaviours class !");
+			return;
+		}
+
+		enemyB._patrolState._patrol = _patrol;
 		/* TODO
 		 * 
 		 * set the patrol and the properties
