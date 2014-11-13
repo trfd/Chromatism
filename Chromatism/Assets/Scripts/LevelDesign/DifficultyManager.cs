@@ -64,6 +64,7 @@ public class DifficultyManager : MonoBehaviour {
 		m_currentKills++;
 		if(m_currentKills >= ((m_killForLevelUp + m_levelUpCoef) * m_level) && m_level <= m_maxLevel)
 		{
+			Debug.Log("level up !");
 			m_level++;
 		}
 	}
@@ -74,7 +75,7 @@ public class DifficultyManager : MonoBehaviour {
 		m_levelUpCoef = 3;
 		m_currentKills = 0;
 		m_maxLevel = 666;
-		m_level = 0;
+		m_level = 1;
 	}
 
 
@@ -94,8 +95,9 @@ public class DifficultyManager : MonoBehaviour {
 
 	public void AdjustPropertiesToDifficulty( ref EnemyBehaviour enemy)
 	{
-		if(enemy != null)
+		if(enemy != null && enemy.Properties != null)
 		{
+			Debug.Log("Spawn de mob");
 			enemy.Properties.WeaponBulletDamages = m_defaultBulletDammage + (m_bulletdammageMaxValue - m_defaultBulletDammage) * (m_level / m_maxLevel);
 			enemy.Properties.WeaponBulletRange = m_defaultBulletRange + (m_rangeMaxValue - m_defaultBulletRange) * (m_level / m_maxLevel);
 			enemy.Properties.WeaponBulletSize = m_defaultBulletSize + (m_bulletSizeMaxValue - m_defaultBulletSize) * (m_level / m_maxLevel);
