@@ -99,6 +99,8 @@ public class PlayerBehaviour : MonoBehaviour
 		// Register Delegates
 
 		m_pawn.OnPawnHit += OnPlayerHit;
+		m_pawn.OnPawnDie += OnPlayerDie;
+
 		m_weapon.OnWeaponShoot       += OnPlayerWeaponShoot;
 		m_weapon.OnWeaponStartReload += OnPlayerWeaponStartReload;
 		m_weapon.OnWeaponStopReload  += OnPlayerWeaponStopReload;
@@ -132,6 +134,11 @@ public class PlayerBehaviour : MonoBehaviour
 	#endregion
 
 	#region Event
+
+	private void OnPlayerDie(Pawn pawn)
+	{
+		GPEventManager.Instance.Raise("PlayerDied",new GPEvent());
+	}
 
 	private void OnPlayerHit(Pawn pawn)
 	{

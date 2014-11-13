@@ -40,8 +40,7 @@ public class GameManager : MonoBehaviour
 			if(m_instance == null)
 			{
 				m_instance = GameObject.FindObjectOfType<GameManager>();
-				
-				DontDestroyOnLoad(m_instance.gameObject);
+				//DontDestroyOnLoad(m_instance.gameObject);
 			}
 			
 			return m_instance;
@@ -53,7 +52,7 @@ public class GameManager : MonoBehaviour
 		if(m_instance == null)
 		{
 			m_instance = this;
-			DontDestroyOnLoad(this);
+			//DontDestroyOnLoad(this);
 		}
 		else
 		{
@@ -77,7 +76,18 @@ public class GameManager : MonoBehaviour
 	void Start()
 	{
 		Screen.lockCursor = true;
+
+		GPEventManager.Instance.Register("RestartLevel",OnPlayerDied);
 	}
 
 	#endregion		
+
+	#region Events
+
+	private void OnPlayerDied(string evtName, GPEvent evt)
+	{
+
+	}
+
+	#endregion
 }

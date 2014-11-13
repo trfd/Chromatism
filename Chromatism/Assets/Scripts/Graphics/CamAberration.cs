@@ -33,14 +33,19 @@ public class CamAberration : MonoBehaviour
 	private PlayerBehaviour m_player;
 	private Timer m_animTimer;
 
+	private Timer m_deathTimer;
+
 	private int m_coefID;
 	private int m_redCoefID;
 	private int m_greenCoefID;
 	private int m_blueCoefID;
 	
 	public float _animationDuration;
+	public float _deathDuration;
+
 
 	public AnimationCurve _hitCoefAnimation;
+	public AnimationCurve _deathCoefAnimation;
 
 	public Material _material;
 
@@ -55,9 +60,7 @@ public class CamAberration : MonoBehaviour
 		m_blueCoefID  = Shader.PropertyToID("_BlueCoef");
 
 		GPEventManager.Instance.Register("PlayerTouched",OnPlayerTouched);
-
-
-
+		GPEventManager.Instance.Register("PlayerDied",OnPlayerDied);
 	}
 
 	void Update()
@@ -66,13 +69,22 @@ public class CamAberration : MonoBehaviour
 		_material.SetFloat(m_greenCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel1));
 		_material.SetFloat(m_blueCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel2));
 
+		if(m_deathTimer != null && !m_deathTimer.IsElapsedLoop)
+		{
+			float value = _deathCoefAnimation.Evaluate(1.0f-m_deathTimer.CurrentNormalized);
+			_material.SetFloat(m_coefID,value);
+		}
+		else if (m_deathTimer != null && m_deathTimer.IsElapsedLoop)
+		{
+			GPEventManager.Instance.Raise("RestartLevel",new GPEvent());
+		}
+
 		if(m_isAnimating && !m_animTimer.IsElapsedLoop)
 		{
 			float value = _hitCoefAnimation.Evaluate(1.0f-m_animTimer.CurrentNormalized);
 			_material.SetFloat(m_coefID,value);
 		}
-
-		if(m_isAnimating && m_animTimer.IsElapsedLoop)
+		else if(m_isAnimating && m_animTimer.IsElapsedLoop)
 		{
 			m_isAnimating = false;
 			_material.SetFloat(m_coefID,0);
@@ -91,7 +103,11 @@ public class CamAberration : MonoBehaviour
 		_material.SetFloat(m_redCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel0));
 		_material.SetFloat(m_greenCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel1));
 		_material.SetFloat(m_blueCoefID, Mathf.Lerp(0f,0.01f,m_player.Properties.ColorChannel2));
+	}
 
+	void OnPlayerDied(string str, GPEvent evt)
+	{
+		m_deathTimer = new Timer(_deathDuration);
 	}
 
 	[InspectorButton("Test Anim")]
@@ -101,5 +117,12 @@ public class CamAberration : MonoBehaviour
 
 		m_isAnimating = true;
 	}
+
+	[InspectorButton("Test Death Anim")]
+	void StartDeathAnim()
+	{
+		m_deathTimer = new Timer(_deathDuration);
+	}
+
 
 }

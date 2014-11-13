@@ -55,8 +55,7 @@ public class GPEventManager : MonoBehaviour
 			if(m_instance == null)
 			{
 				m_instance = GameObject.FindObjectOfType<GPEventManager>();
-				
-				DontDestroyOnLoad(m_instance.gameObject);
+				//DontDestroyOnLoad(m_instance.gameObject);
 			}
 			
 			return m_instance;
@@ -69,7 +68,7 @@ public class GPEventManager : MonoBehaviour
 		{
 			m_instance = this;
 			m_instance.Init();
-			DontDestroyOnLoad(this);
+			//DontDestroyOnLoad(this);
 		}
 		else
 		{
