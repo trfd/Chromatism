@@ -176,12 +176,14 @@ public class Weapon : MonoBehaviour
 		m_isReloading = true;
 		m_reloadTimer.Reset(ReloadDuration);
 
+		if(gameObject.name == "FPSController")
+			Fabric.EventManager.Instance.PostEvent ("Overheating", gameObject);
+
 		m_isInputShooting = false;
 
 		if(OnWeaponStartReload != null)
 			OnWeaponStartReload(this);
 
-		Fabric.EventManager.Instance.PostEvent ("Overheating", gameObject);
 	}
 
 	private void EndReload()
@@ -206,8 +208,13 @@ public class Weapon : MonoBehaviour
 
 		m_remainingBullets--;
 
+		if(gameObject.name == "Enemy")
+			Fabric.EventManager.Instance.PostEvent("enemyshoot",gameObject);
+		else
+			Fabric.EventManager.Instance.PostEvent("weapon_shoot",gameObject);
+
 		ShootBullet();
-		Fabric.EventManager.Instance.PostEvent("weapon_shoot",gameObject);
+
 
 		if(m_remainingBullets == 0)
 			StartReload();

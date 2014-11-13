@@ -182,6 +182,7 @@ public class PlayerBehaviour : MonoBehaviour
 		}
 
 		GPEventManager.Instance.Raise("PlayerPickOrb",new GPEvent());
+        Fabric.EventManager.Instance.PostEvent("orb_pickup", gameObject);
 	}
 
 	#endregion
