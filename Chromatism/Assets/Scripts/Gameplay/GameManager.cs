@@ -65,6 +65,8 @@ public class GameManager : MonoBehaviour
 
 	#region Public Member
 
+	public Pool _bulletPool;
+
 	public float _enemyOrbLossChannel0;
 	public float _enemyOrbLossChannel1;
 	public float _enemyOrbLossChannel2;
