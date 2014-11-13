@@ -124,7 +124,10 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	private void UpdateAI()
 	{
 		if(m_pawn.IsDead)
+		{
+			m_currState = State.REST;
 			return;
+		}
 
 		if(IsSeeingPlayer())
 			m_currState = State.ATTACK;
@@ -172,6 +175,7 @@ public class BasicEnemyBehaviour : MonoBehaviour
 	private void UpdateAttack()
 	{
 		LookAt(m_player.transform.position);
+		MoveForward();
 		AimAtPlayer();
 
 		Shoot();
@@ -191,6 +195,11 @@ public class BasicEnemyBehaviour : MonoBehaviour
 		m_weapon.Owner.AimingPoint = m_player.transform.position;
 
 		// TODO: introduce offset
+	}
+
+	private void MoveForward()
+	{
+		rigidbody.velocity = transform.forward * m_pawn.Properties.EntityVelocity;
 	}
 
 	#endregion

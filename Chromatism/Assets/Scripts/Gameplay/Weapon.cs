@@ -48,11 +48,6 @@ public class Weapon : MonoBehaviour
 	#region Public Member
 
 	/// <summary>
-	/// Bullet pool used to get bullets.
-	/// </summary>
-	public Pool _bulletPool;
-
-	/// <summary>
 	/// Location used to spawn bullets.
 	/// </summary>
 	public Transform _bulletSpawnTransform;
@@ -176,10 +171,14 @@ public class Weapon : MonoBehaviour
 		m_isReloading = true;
 		m_reloadTimer.Reset(ReloadDuration);
 
+		if(gameObject.name == "FPSController")
+			Fabric.EventManager.Instance.PostEvent ("Overheating", gameObject);
+
 		m_isInputShooting = false;
 
 		if(OnWeaponStartReload != null)
 			OnWeaponStartReload(this);
+
 	}
 
 	private void EndReload()
@@ -204,7 +203,13 @@ public class Weapon : MonoBehaviour
 
 		m_remainingBullets--;
 
+		if(gameObject.name == "Enemy")
+			Fabric.EventManager.Instance.PostEvent("enemyshoot",gameObject);
+		else
+			Fabric.EventManager.Instance.PostEvent("weapon_shoot",gameObject);
+
 		ShootBullet();
+
 
 		if(m_remainingBullets == 0)
 			StartReload();
@@ -212,7 +217,7 @@ public class Weapon : MonoBehaviour
 
 	private void ShootBullet()
 	{
-		Bullet newBullet = (Bullet) _bulletPool.GetUnusedObject();
+		Bullet newBullet = (Bullet) GameManager.Instance._bulletPool.GetUnusedObject();
 
 		if(newBullet == null)
 		{

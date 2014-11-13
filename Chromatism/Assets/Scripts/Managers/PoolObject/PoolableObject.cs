@@ -31,19 +31,21 @@ public abstract class PoolableObject : MonoBehaviour
 
 	#endregion
 
+
+
 	#region Override Interface
 
 	/// <summary>
 	/// Called whenever the object is picked up in the pool.
 	/// This should be used for activating stuff.
 	/// </summary>
-	protected virtual void OnPoolInit(){}
+	public virtual void OnPoolInit(){}
 
 	/// <summary>
 	/// Called whenever the object is 
 	/// This should be used for deactivating stuff.
 	/// </summary>
-	protected virtual void OnPoolClear(){}
+	public virtual void OnPoolClear(){}
 
 
 	#endregion

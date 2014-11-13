@@ -87,7 +87,7 @@ public class EntityPropertiesManager : MonoBehaviour
 			{
 				m_instance = GameObject.FindObjectOfType<EntityPropertiesManager>();
 
-				DontDestroyOnLoad(m_instance.gameObject);
+				//DontDestroyOnLoad(m_instance.gameObject);
 			}
 			
 			return m_instance;
@@ -99,7 +99,7 @@ public class EntityPropertiesManager : MonoBehaviour
 		if(m_instance == null)
 		{
 			m_instance = this;
-			DontDestroyOnLoad(this);
+			//DontDestroyOnLoad(this);
 		}
 		else
 		{

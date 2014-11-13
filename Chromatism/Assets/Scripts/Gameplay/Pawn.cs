@@ -31,6 +31,12 @@ using System.Collections;
 [RequireComponent(typeof(EntityProperties))]
 public class Pawn : MonoBehaviour
 {
+	public enum DeathType
+	{
+		FIRST_CHANNEL_DOWN,
+		ALL_CHANNELS_DOWN
+	}
+
 	public delegate void PawnDelegate(Pawn pawn);
 
 	#region Private Members
@@ -48,6 +54,8 @@ public class Pawn : MonoBehaviour
 	#endregion
 
 	#region Public Members
+
+	public DeathType _death;
 
 	/// <summary>
 	/// The coeficient of color loss when hit by a bullet.
@@ -132,14 +140,38 @@ public class Pawn : MonoBehaviour
 		m_properties.ColorChannel1 -= _channel1LossCoef * bullet.Damages * otherProperties.ColorChannel1;
 		m_properties.ColorChannel2 -= _channel2LossCoef * bullet.Damages * otherProperties.ColorChannel2;
 
-		if(m_properties.ColorChannel0 <= 0 || 
-		   m_properties.ColorChannel1 <= 0 ||
-		   m_properties.ColorChannel2 <= 0 )
+		if(CheckDeath())
 		{
 			Die();
 		}
 		else if(OnPawnHit != null)
 			OnPawnHit(this);
+	}
+
+	private bool CheckDeath()
+	{
+		switch(_death)
+		{
+		case DeathType.ALL_CHANNELS_DOWN:  return CheckDeathAllChannels();
+		case DeathType.FIRST_CHANNEL_DOWN: return CheckDeathFirstChannel();
+		default: Debug.LogError("Incorrect Death Type"); break;
+		}
+
+		return false;
+	}
+
+	private bool CheckDeathAllChannels()
+	{
+		return (m_properties.ColorChannel0 <= 0 && 
+			    m_properties.ColorChannel1 <= 0 &&
+		        m_properties.ColorChannel2 <= 0 );
+	}
+
+	private bool CheckDeathFirstChannel()
+	{
+		return (m_properties.ColorChannel0 <= 0 || 
+		        m_properties.ColorChannel1 <= 0 ||
+		        m_properties.ColorChannel2 <= 0 );
 	}
 
 	#endregion

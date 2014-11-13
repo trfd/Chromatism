@@ -31,6 +31,8 @@ public class Bullet : PoolableObject
 {
 	#region Private Members
 
+	private Renderer m_renderer;
+
 	/// <summary>
 	/// Starting Point of bullet.
 	/// </summary>
@@ -82,6 +84,8 @@ public class Bullet : PoolableObject
 
 	void Start()
 	{
+		m_renderer = GetComponentInChildren<Renderer>();
+		OnPoolClear();
 	}
 
 	void Update()
@@ -95,6 +99,8 @@ public class Bullet : PoolableObject
 			OutOfRange();
 		else
 			transform.position += Time.deltaTime * Velocity;
+
+		transform.rotation =  Quaternion.LookRotation(Velocity);
 	}
 
 	void OnCollisionEnter(Collision coll)
@@ -124,10 +130,10 @@ public class Bullet : PoolableObject
 	/// Called whenever the object is picked up in the pool.
 	/// This should be used for activating stuff.
 	/// </summary>
-	protected override void OnPoolInit()
+	public override void OnPoolInit()
 	{
 		collider.enabled = true;
-		renderer.enabled = true;
+		m_renderer.enabled = true;
 		this.enabled = true;
 
 		m_isUsed = false;
@@ -137,7 +143,7 @@ public class Bullet : PoolableObject
 	/// Called whenever the object is 
 	/// This should be used for deactivating stuff.
 	/// </summary>
-	protected override void OnPoolClear()
+	public override void OnPoolClear()
 	{
 		m_isUsed = true;
 		m_spawnPoint = Vector3.zero;
@@ -148,7 +154,7 @@ public class Bullet : PoolableObject
 		Velocity = Vector3.zero;
 
 		collider.enabled = false;
-		renderer.enabled = false;
+		m_renderer.enabled = false;
 		this.enabled = false;
 		rigidbody.Sleep();
 	}
@@ -197,7 +203,11 @@ public class Bullet : PoolableObject
 
 			pawn.HitByBullet(this);
 		}
-		
+		else
+		{
+			//YOLO: Bullet Hits Wall
+		}
+
 		SetUsed();
 	}
 
