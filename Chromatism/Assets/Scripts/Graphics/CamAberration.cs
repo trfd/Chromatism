@@ -61,6 +61,11 @@ public class CamAberration : MonoBehaviour
 
 		GPEventManager.Instance.Register("PlayerTouched",OnPlayerTouched);
 		GPEventManager.Instance.Register("PlayerDied",OnPlayerDied);
+
+		_material.SetFloat(m_coefID,      0);
+		_material.SetFloat(m_redCoefID,   0);
+		_material.SetFloat(m_greenCoefID, 0);
+		_material.SetFloat(m_blueCoefID,  0);
 	}
 
 	void Update()
@@ -123,6 +128,4 @@ public class CamAberration : MonoBehaviour
 	{
 		m_deathTimer = new Timer(_deathDuration);
 	}
-
-
 }
