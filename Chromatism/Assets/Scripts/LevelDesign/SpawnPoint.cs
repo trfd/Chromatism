@@ -59,18 +59,23 @@ public class SpawnPoint : MonoBehaviour {
 		}
 
 		var enemySpawned = GameObject.Instantiate(_enemyPrefab, transform.position, Quaternion.identity) as GameObject;
-		var enemyB = enemySpawned.GetComponent<BasicEnemyBehaviour>();
-		if(enemyB == null)
+		var bEnemyB = enemySpawned.GetComponent<BasicEnemyBehaviour>();
+		if(bEnemyB == null)
 		{
 			Debug.LogError("Enemy should have BasicEnemyBehaviours class !");
 			return;
 		}
 
-		enemyB._patrolState._patrol = _patrol;
-		/* TODO
-		 * 
-		 * set the patrol and the properties
-		 */
+		bEnemyB._patrolState._patrol = _patrol;
+
+		var enemyB = enemySpawned.GetComponent<EnemyBehaviour>();
+		if(enemyB == null)
+		{
+			Debug.LogError("Enemy should have EnemyBehaviours class !");
+			return;
+		}
+		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB);
+
 	}
 
 	#endregion
