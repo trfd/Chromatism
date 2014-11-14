@@ -85,17 +85,20 @@ public class WaveManager : MonoBehaviour
 		GPEventManager.Instance.Register("EnemySpawned",OnEnemySpawned);
 		GPEventManager.Instance.Register("EnemyDied",OnEnemyDied);
 
-		UpdateWaves();
+
+		_waves[m_currWaveIdx].StartWave();
 	}
 
-	void UpdateWaves()
+	void Update()
 	{
-		if(m_enemies.Count == 0)
+		if(m_enemies.Count == 0 && _waves[m_currWaveIdx].HasSpawned)
 		{
+			_waves[m_currWaveIdx].Clear();
+			m_currWaveIdx = (m_currWaveIdx+1)%_waves.Length;
 			Debug.Log("Start Wave "+m_currWaveIdx);
 			_waves[m_currWaveIdx].StartWave();
-			m_currWaveIdx = (m_currWaveIdx+1)%_waves.Length;
 		}
+
 	}
 
 	void OnEnemySpawned(string evtName, GPEvent evt)
@@ -111,6 +114,6 @@ public class WaveManager : MonoBehaviour
 
 		m_enemies.Remove(goEvt._object);
 
-		UpdateWaves();
+		//UpdateWaves();
 	}
 }

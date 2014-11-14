@@ -18,8 +18,14 @@ public class SpawnPoint : MonoBehaviour
 	[Range(0.0f,1f)]
 	public float _colorChannel2;
 
+	[InspectorLabel]
 	private int m_numberToSpawn;
 	private Timer m_spawnTimer;
+
+	public bool HasSpawned
+	{
+		get; set;
+	}
 
 	#endregion
 
@@ -32,8 +38,6 @@ public class SpawnPoint : MonoBehaviour
 			Debug.LogError("Set the fucking values you dumbass !");
 			return;
 		}
-
-		//StartSpawn();
 	}
 
 	void Update()
@@ -46,9 +50,9 @@ public class SpawnPoint : MonoBehaviour
 			SpawnOneEnemy();
 
 			if(m_numberToSpawn > 0)
-			{
 				m_spawnTimer.Reset(_cooldown);
-			}
+			else
+				m_spawnTimer = null;
 		}
 	}
 
@@ -87,6 +91,9 @@ public class SpawnPoint : MonoBehaviour
 			Debug.LogError("Enemy should have EnemyBehaviours class !");
 			return;
 		}
+
+		m_numberToSpawn--;
+		HasSpawned = true;
 
 		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB, new Vector3(_colorChannel0,_colorChannel1,_colorChannel2));
 
