@@ -44,6 +44,8 @@ public class ColorCanalDisplay : MonoBehaviour
 
 	private int m_currIdx;
 
+	public TextMesh _textMesh;
+
 	public float _xScale = 1.0f;
 	public float _yScale = 1.0f;
 	public float _updateFrequency;
@@ -74,6 +76,8 @@ public class ColorCanalDisplay : MonoBehaviour
 			AddData();
 			m_updateTimer = null;
 		}
+
+		_textMesh.text = ((int)(100f*m_player.Properties.ColorValueChannel(_channel))).ToString();
 	}
 
 	#region Events
