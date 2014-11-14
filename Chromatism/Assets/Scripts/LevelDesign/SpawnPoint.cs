@@ -10,6 +10,13 @@ public class SpawnPoint : MonoBehaviour {
 	public int _numberOfEntitiesByWave;
 	public float _cooldown;
 
+	[Range(0.0f,1f)]
+	public float _colorChannel0;
+	[Range(0.0f,1f)]
+	public float _colorChannel1;
+	[Range(0.0f,1f)]
+	public float _colorChannel2;
+
 	private int m_numberToSpawn;
 	private Timer m_spawnTimer;
 
@@ -74,6 +81,7 @@ public class SpawnPoint : MonoBehaviour {
 			Debug.LogError("Enemy should have EnemyBehaviours class !");
 			return;
 		}
+
 		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB);
 
 	}

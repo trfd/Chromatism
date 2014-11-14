@@ -20,17 +20,25 @@ public class DifficultyManager : MonoBehaviour {
 
 	public static DifficultyManager Instance
 	{
-		get{
+		get
+		{
 			if(m_instance == null) 
 			{
 				GameObject singleton = new GameObject();
 				m_instance = singleton.AddComponent<DifficultyManager>();
 				singleton.name = "DifficultyManager";
-				DontDestroyOnLoad(singleton);
 				m_instance.Reset();
 			}
 			
 			return m_instance;
+		}
+
+		set
+		{
+			if(m_instance == null)
+			{
+				m_instance = value;
+			}
 		}
 	}
 
@@ -52,7 +60,8 @@ public class DifficultyManager : MonoBehaviour {
 
 	void Start()
 	{
-		GPEventManager.Instance.Register("EnemyDied", OnKill);
+		m_instance = this;
+		m_instance.Reset();
 	}
 
 	#endregion
@@ -77,36 +86,39 @@ public class DifficultyManager : MonoBehaviour {
 		m_currentKills = 0;
 		m_maxLevel = 666;
 		m_level = 1;
+		DontDestroyOnLoad(this);
+		Debug.Log("reset");
+		GPEventManager.Instance.Register("EnemyDied", OnKill);
 	}
 
+	public float _defaultBulletDammage = 0.1f;
+	public float _defaultBulletRange = 50f;
+	public float _defaultBulletSize = 0.1f;
+	public float _defaultBulletVelocity = 4f;
+	public float _defaultFireRate = 10f;
+	public float _defaultMagazineSize = 1f;
 
-	private float m_defaultBulletDammage = 0.1f;
-	private float m_defaultBulletRange = 50f;
-	private float m_defaultBulletSize = 0.1f;
-	private float m_defaultBulletVelocity = 4f;
-	private float m_defaultFireRate = 10f;
-	private float m_defaultMagazineSize = 1f;
-
-	private float m_bulletdammageMaxValue = 1f;
-	private float m_rangeMaxValue = 1000f;
-	private float m_bulletSizeMaxValue = 3f;
-	private float m_bulletVelocityMaxValue = 30f;
-	private float m_fireRateMaxValue = 200f;
-	private float m_magazineMaxValue = 100f;
+	public float _bulletDammageMaxValue = 1f;
+	public float _rangeMaxValue = 1000f;
+	public float _bulletSizeMaxValue = 3f;
+	public float _bulletVelocityMaxValue = 30f;
+	public float _fireRateMaxValue = 200f;
+	public float _magazineMaxValue = 100f;
 
 	public void AdjustPropertiesToDifficulty( ref EnemyBehaviour enemy)
 	{
-		if(enemy != null && enemy.Properties != null)
+		if(enemy.Properties == null)
 		{
-			Debug.Log("Spawn de mob");
-			enemy.Properties.WeaponBulletDamages = m_defaultBulletDammage + (m_bulletdammageMaxValue - m_defaultBulletDammage) * (m_level / m_maxLevel);
-			enemy.Properties.WeaponBulletRange = m_defaultBulletRange + (m_rangeMaxValue - m_defaultBulletRange) * (m_level / m_maxLevel);
-			enemy.Properties.WeaponBulletSize = m_defaultBulletSize + (m_bulletSizeMaxValue - m_defaultBulletSize) * (m_level / m_maxLevel);
-			enemy.Properties.WeaponBulletVelocity = m_defaultBulletVelocity + (m_bulletVelocityMaxValue - m_defaultBulletVelocity) * (m_level / m_maxLevel);
-			enemy.Properties.WeaponFireRate = m_defaultFireRate + (m_fireRateMaxValue - m_defaultFireRate) * (m_level / m_maxLevel);
-			enemy.Properties.WeaponMagazineSize = m_defaultMagazineSize + (m_magazineMaxValue - m_defaultMagazineSize) * (m_level / m_maxLevel);
+			enemy.Init();
 		}
-	} 
+
+		enemy.Properties.WeaponBulletDamages = _defaultBulletDammage + (_bulletDammageMaxValue - _defaultBulletDammage) * (m_level / m_maxLevel);
+		enemy.Properties.WeaponBulletRange = _defaultBulletRange + (_rangeMaxValue - _defaultBulletRange) * (m_level / m_maxLevel);
+		enemy.Properties.WeaponBulletSize = _defaultBulletSize + (_bulletSizeMaxValue - _defaultBulletSize) * (m_level / m_maxLevel);
+		enemy.Properties.WeaponBulletVelocity = _defaultBulletVelocity + (_bulletVelocityMaxValue - _defaultBulletVelocity) * (m_level / m_maxLevel);
+		enemy.Properties.WeaponFireRate = _defaultFireRate + (_fireRateMaxValue - _defaultFireRate) * (m_level / m_maxLevel);
+		enemy.Properties.WeaponMagazineSize = _defaultMagazineSize + (_magazineMaxValue - _defaultMagazineSize) * (m_level / m_maxLevel);
+	}
 	
 	#endregion
 }

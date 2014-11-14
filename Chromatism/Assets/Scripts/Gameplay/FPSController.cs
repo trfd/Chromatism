@@ -29,6 +29,8 @@ public class FPSController : MonoBehaviour
 	private int m_forward = 0;
 	private int m_right = 0;
 	private bool m_canJump = false;
+	private float m_yOffset;
+	private float m_feetRadius;
 
 	enum Direction
 	{
@@ -249,6 +251,15 @@ public class FPSController : MonoBehaviour
 	#region Collision
 
 	// verifying if we can jump again
+	bool IsGrounding()
+	{
+		Collider[] cols = Physics.OverlapSphere(transform.position + Vector3.up * m_yOffset, 
+		                                        m_feetRadius,
+		                                        1 << LayerMask.NameToLayer("wall") | 1 << LayerMask.NameToLayer("Lattes"));
+		
+		return cols.Length > 0;
+	}
+
 	void OnCollisionEnter(Collision collision)
 	{
 		if (collision.gameObject.CompareTag ("ground"))
@@ -264,5 +275,11 @@ public class FPSController : MonoBehaviour
 	void StartReload(string evtName, GPEvent gpEvent)
 	{
 		_weaponAnimator.SetTrigger("Reload");
+	}
+
+	public virtual void OnDrawGizmos(){
+		Gizmos.color = Color.blue;
+		
+		Gizmos.DrawWireSphere(transform.position + Vector3.up * m_yOffset, m_feetRadius);
 	}
 }

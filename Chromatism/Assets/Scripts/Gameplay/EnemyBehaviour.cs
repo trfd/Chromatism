@@ -82,6 +82,11 @@ public class EnemyBehaviour : MonoBehaviour
 
 	void Start()
 	{
+		Init();
+	}
+
+	public void Init()
+	{
 		m_properties = GetComponent<EntityProperties>();
 		m_pawn = GetComponent<Pawn>();
 
