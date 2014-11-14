@@ -20,6 +20,9 @@ public static class KeyBindRefs
 			temp.Add(new KeyConfig("MouseX"), new List<string>{"MouseX"});
 			temp.Add(new KeyConfig("MouseY"), new List<string>{"MouseY"});
 			temp.Add(new KeyConfig(KeyCode.Tab), new List<string>{"KeyBindGUI"});
+			temp.Add(new KeyConfig(KeyCode.UpArrow), new List<string>{"SwitchUpMenu"});
+			temp.Add(new KeyConfig(KeyCode.DownArrow), new List<string>{"SwitchDownMenu"});
+			temp.Add(new KeyConfig(KeyCode.Return), new List<string>{"EnterMenu"});
 
             return temp;
         }
@@ -39,6 +42,9 @@ public static class KeyBindRefs
 			temp.Add("MouseX", new AxisActionConfig(KeyType.Head, 0, null));
 			temp.Add("MouseY", new AxisActionConfig(KeyType.Head, 0, null));
 			temp.Add("KeyBindGUI", new KeyActionConfig(KeyType.Menu, 0, null, null));
+			temp.Add("SwitchUpMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
+			temp.Add("SwitchDownMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
+			temp.Add("EnterMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
 
             return temp;
         }
