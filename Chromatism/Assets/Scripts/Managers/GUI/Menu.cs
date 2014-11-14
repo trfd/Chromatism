@@ -1,12 +1,15 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class Menu : MonoBehaviour {
+public class Menu : MonoBehaviour 
+{
 
 	public GameObject _menu;
 	public GameObject _credits;
 	public GameObject _selector1;
 	public GameObject _selector2;
+	
+	public string _gameSceneName;
 
 	void Start()
 	{
@@ -41,7 +44,7 @@ public class Menu : MonoBehaviour {
 		{
 			Fabric.EventManager.Instance.PostEvent("music_menu_off");
 			Fabric.EventManager.Instance.PostEvent("music_level_on");
-			Application.LoadLevel("Game");
+			Application.LoadLevel(_gameSceneName);
 		}else{
 			SwitchDisplay();
 		}
