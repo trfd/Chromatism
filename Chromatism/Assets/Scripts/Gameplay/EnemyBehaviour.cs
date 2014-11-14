@@ -162,6 +162,8 @@ public class EnemyBehaviour : MonoBehaviour
         Fabric.EventManager.Instance.PostEvent("enemydeath", gameObject);
 		
 		SpawnOrbs();
+
+		Destroy(this.gameObject,1.5f);
 	}
 
 

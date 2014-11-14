@@ -134,7 +134,13 @@ public class Bullet : PoolableObject
 	public override void OnPoolInit()
 	{
 		collider.enabled = true;
-		m_renderer.enabled = true;
+
+		if(m_renderer == null)
+			m_renderer = GetComponentInChildren<Renderer>();
+
+		if(m_renderer != null)
+			m_renderer.enabled = true;
+
 		this.enabled = true;
 
 		m_isUsed = false;
