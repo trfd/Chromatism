@@ -65,7 +65,7 @@ public class FPSController : MonoBehaviour
 		KeyBinder.Instance.DefineActions("Backward", new KeyActionConfig(KeyType.Movement, 1, Backward, () => {m_forward += 1;}));
 		KeyBinder.Instance.DefineActions("StrafeLeft", new KeyActionConfig(KeyType.Movement, 2, StrafeLeft, () => {m_right += 1;}));
 		KeyBinder.Instance.DefineActions("StrafeRight", new KeyActionConfig(KeyType.Movement, 3, StrafeRight, () => {m_right -= 1;}));
-		KeyBinder.Instance.DefineActions("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, () => {if(m_canJump){rigidbody.AddForce(Vector3.up * m_properties.Gravity);m_canJump = false;}}, null));
+		KeyBinder.Instance.DefineActions("Jump/Dash", new KeyActionConfig(KeyType.Movement, 4, () => {if(m_canJump){Jump();}}, null));
 		KeyBinder.Instance.DefineActions("MouseX", new AxisActionConfig(KeyType.Head, 0, MouseX));
 		KeyBinder.Instance.DefineActions("MouseY", new AxisActionConfig(KeyType.Head, 0, MouseY));
 
@@ -189,6 +189,16 @@ public class FPSController : MonoBehaviour
 	{
 		rigidbody.useGravity = true;
 		m_dashDirection = Vector3.zero;
+	}
+
+	void Jump()
+	{
+		rigidbody.AddForce(Vector3.up * m_properties.Gravity);
+		m_canJump = false;
+		/*
+		Fabric.EventManager.Instance.PostEvent("foot_jump",gameObject);
+		Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
+		*/
 	}
 
 	#endregion
