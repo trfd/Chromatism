@@ -184,6 +184,9 @@ public class FPSController : MonoBehaviour
 			m_dashDistanceRun = 0f;
 			rigidbody.velocity = Vector3.zero;
 			rigidbody.useGravity = false;
+
+            Fabric.EventManager.Instance.PostEvent("foot_dash", gameObject);
+            Fabric.EventManager.Instance.PostEvent("foot_on", gameObject);
 		}
 	}
 
