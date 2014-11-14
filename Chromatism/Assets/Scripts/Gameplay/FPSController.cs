@@ -37,6 +37,12 @@ public class FPSController : MonoBehaviour
 	private float m_jumpCd = 1f;
 	private Timer m_jumpTimer;
 
+
+	//movement audio
+	private float m_deltaTimeWalk = 0.32f;
+	private float m_lastTimeWalk = 0f;
+	private bool m_isWalking = false;
+
 	enum Direction
 	{
 		NONE,
@@ -115,8 +121,22 @@ public class FPSController : MonoBehaviour
 		if(m_forward != 0 || m_right != 0)
 		{
 			_weaponAnimator.SetBool("Walk", true);
+
+			if(!m_isWalking && m_canJump)
+			{
+				Fabric.EventManager.Instance.PostEvent("foot_walk",gameObject);
+				m_isWalking = true;
+			}
+			AudioWalk();
+
 		}else{
 			_weaponAnimator.SetBool("Walk", false);
+			if(m_isWalking && m_canJump)
+			{
+				Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
+				m_lastTimeWalk = 0f;
+				m_isWalking = false;
+			}
 		}
 
 //		if(m_weaponRotation != 0)
@@ -149,6 +169,11 @@ public class FPSController : MonoBehaviour
 		}else{
 			_weaponAnimator.SetBool("Walk", false);
 			m_canJump = false;
+		}
+
+		if(m_isWalking && m_canJump)
+		{
+			m_lastTimeWalk += Time.deltaTime;
 		}
 	}
 
@@ -245,10 +270,15 @@ public class FPSController : MonoBehaviour
 
 	void Grounding()
 	{
+		if(!m_canJump)
+		{
+			Fabric.EventManager.Instance.PostEvent("foot_fall",gameObject);
+			Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
+			Fabric.EventManager.Instance.PostEvent("foot_walk",gameObject);
+		}
 		m_canJump = true;
 		
-		//Fabric.EventManager.Instance.PostEvent("foot_fall",gameObject);
-		//Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
+
 	}
 
 	#endregion
@@ -318,4 +348,15 @@ public class FPSController : MonoBehaviour
 		
 		Gizmos.DrawWireSphere(transform.position + Vector3.up * m_yOffset, m_feetRadius);
 	}
+
+	#region AudioWalk
+
+	void AudioWalk(){
+		if(m_lastTimeWalk > m_deltaTimeWalk && m_canJump)
+		{
+			Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
+			m_lastTimeWalk = 0f;
+		}
+	}
+	#endregion
 }
