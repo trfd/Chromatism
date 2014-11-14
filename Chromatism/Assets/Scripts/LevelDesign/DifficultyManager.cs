@@ -25,7 +25,7 @@ public class DifficultyManager : MonoBehaviour {
 			{
 				GameObject singleton = new GameObject();
 				m_instance = singleton.AddComponent<DifficultyManager>();
-				singleton.name = "SpawnManager";
+				singleton.name = "DifficultyManager";
 				DontDestroyOnLoad(singleton);
 				m_instance.Reset();
 			}
@@ -61,6 +61,7 @@ public class DifficultyManager : MonoBehaviour {
 
 	void OnKill( string evtName, GPEvent gpEvent)
 	{
+		Debug.Log("Kill detected !");
 		m_currentKills++;
 		if(m_currentKills >= ((m_killForLevelUp + m_levelUpCoef) * m_level) && m_level <= m_maxLevel)
 		{

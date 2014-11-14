@@ -195,10 +195,17 @@ public class FPSController : MonoBehaviour
 	{
 		rigidbody.AddForce(Vector3.up * m_properties.Gravity);
 		m_canJump = false;
-		/*
+		
 		Fabric.EventManager.Instance.PostEvent("foot_jump",gameObject);
 		Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
-		*/
+	}
+
+	void Grounding()
+	{
+		m_canJump = true;
+		
+		Fabric.EventManager.Instance.PostEvent("foot_fall",gameObject);
+		Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
 	}
 
 	#endregion
@@ -244,8 +251,8 @@ public class FPSController : MonoBehaviour
 	// verifying if we can jump again
 	void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.CompareTag("ground"))
-			m_canJump = true;
+		if (collision.gameObject.CompareTag ("ground"))
+			Grounding ();
 
 		StopDash();
 		rigidbody.velocity = Vector3.zero;
