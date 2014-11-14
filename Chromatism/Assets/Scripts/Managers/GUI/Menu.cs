@@ -13,6 +13,9 @@ public class Menu : MonoBehaviour {
 		KeyBinder.Instance.DefineActions("SwitchUpMenu", new KeyActionConfig(KeyType.Menu, 0, SwitchMenu, null));
 		KeyBinder.Instance.DefineActions("SwitchDownMenu", new KeyActionConfig(KeyType.Menu, 0, SwitchMenu, null));
 		KeyBinder.Instance.DefineActions("EnterMenu", new KeyActionConfig(KeyType.Menu, 0, EnterMenu, null));
+		KeyBinder.Instance.DefineActions("Quit", new KeyActionConfig(KeyType.Menu, 0, () =>{ Application.Quit(); }, null));
+
+		Fabric.EventManager.Instance.PostEvent("music_menu_on");
 	}
 	
 	void Update()
@@ -36,6 +39,8 @@ public class Menu : MonoBehaviour {
 	{
 		if(_menu.activeSelf && _selector1.activeSelf)
 		{
+			Fabric.EventManager.Instance.PostEvent("music_menu_off");
+			Fabric.EventManager.Instance.PostEvent("music_level_on");
 			Application.LoadLevel("Game");
 		}else{
 			SwitchDisplay();

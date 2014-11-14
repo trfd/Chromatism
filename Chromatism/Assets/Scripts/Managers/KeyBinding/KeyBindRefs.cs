@@ -23,6 +23,7 @@ public static class KeyBindRefs
 			temp.Add(new KeyConfig(KeyCode.UpArrow), new List<string>{"SwitchUpMenu"});
 			temp.Add(new KeyConfig(KeyCode.DownArrow), new List<string>{"SwitchDownMenu"});
 			temp.Add(new KeyConfig(KeyCode.Return), new List<string>{"EnterMenu"});
+			temp.Add(new KeyConfig(KeyCode.Escape), new List<string>{"Quit"});
 
             return temp;
         }
@@ -45,6 +46,7 @@ public static class KeyBindRefs
 			temp.Add("SwitchUpMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
 			temp.Add("SwitchDownMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
 			temp.Add("EnterMenu", new KeyActionConfig(KeyType.Menu, 0, null, null));
+			temp.Add("Quit", new KeyActionConfig(KeyType.Menu, 0, null, null));
 
             return temp;
         }
