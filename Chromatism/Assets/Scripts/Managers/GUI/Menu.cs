@@ -53,6 +53,14 @@ public class Menu : MonoBehaviour
 	{
 		_menu.SetActive(!_menu.activeSelf);
 		_credits.SetActive(!_credits.activeSelf); 
+		if(_credits.activeSelf){
+			Fabric.EventManager.Instance.PostEvent("music_menu_off");
+			Fabric.EventManager.Instance.PostEvent("music_credits_on");
+		}
+		else{
+			Fabric.EventManager.Instance.PostEvent("music_menu_on");
+			Fabric.EventManager.Instance.PostEvent("music_credits_off");
+		}
 	}
 
 	void EnterMenu()
