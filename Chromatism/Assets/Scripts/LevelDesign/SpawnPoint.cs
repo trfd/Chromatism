@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpawnPoint : MonoBehaviour {
+public class SpawnPoint : MonoBehaviour 
+{
 
 	#region members
 
@@ -32,14 +33,18 @@ public class SpawnPoint : MonoBehaviour {
 			return;
 		}
 
-		StartSpawn();
+		//StartSpawn();
 	}
 
 	void Update()
 	{
+		if(m_spawnTimer == null)
+			return;
+
 		if(m_spawnTimer.IsElapsedLoop && m_numberToSpawn > 0)
 		{
 			SpawnOneEnemy();
+
 			if(m_numberToSpawn > 0)
 			{
 				m_spawnTimer.Reset(_cooldown);
@@ -67,6 +72,7 @@ public class SpawnPoint : MonoBehaviour {
 
 		var enemySpawned = GameObject.Instantiate(_enemyPrefab, transform.position, Quaternion.identity) as GameObject;
 		var bEnemyB = enemySpawned.GetComponent<BasicEnemyBehaviour>();
+
 		if(bEnemyB == null)
 		{
 			Debug.LogError("Enemy should have BasicEnemyBehaviours class !");
@@ -82,8 +88,9 @@ public class SpawnPoint : MonoBehaviour {
 			return;
 		}
 
-		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB);
+		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB, new Vector3(_colorChannel0,_colorChannel1,_colorChannel2));
 
+		GPEventManager.Instance.Raise("EnemySpawned", new GameObjectEvent(enemyB.gameObject));
 	}
 
 	#endregion
