@@ -79,16 +79,16 @@ public class GameManager : MonoBehaviour
 	{
 		Screen.lockCursor = true;
 
-		GPEventManager.Instance.Register("RestartLevel",OnPlayerDied);
+		GPEventManager.Instance.Register("RestartLevel",OnRestart);
 	}
 
 	#endregion		
 
 	#region Events
 
-	private void OnPlayerDied(string evtName, GPEvent evt)
+	private void OnRestart(string evtName, GPEvent evt)
 	{
-
+		Application.LoadLevel(Application.loadedLevel);
 	}
 
 	#endregion
