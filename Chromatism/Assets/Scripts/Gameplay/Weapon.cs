@@ -203,7 +203,7 @@ public class Weapon : MonoBehaviour
 
 		m_remainingBullets--;
 
-        Debug.Log(gameObject.name);
+        //Debug.Log(gameObject.name);
 		if(gameObject.name == "FPSController")
             Fabric.EventManager.Instance.PostEvent("weapon_shoot", gameObject);
 		else

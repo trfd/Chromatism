@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEditor;
+
 
 public class LevelPattern : ScriptableObject 
 {
@@ -18,8 +18,11 @@ public class LevelPattern : ScriptableObject
 	public void Bake()
 	{
 		Debug.Log("LevelName = " + Name);
-		AssetDatabase.CreateAsset(this, "Assets/Patterns/"+Name+".asset");
-		AssetDatabase.SaveAssets();
+
+#if UNITY_EDITOR
+		UnityEditor.AssetDatabase.CreateAsset(this, "Assets/Patterns/"+Name+".asset");
+		UnityEditor.AssetDatabase.SaveAssets();
+#endif
 	}
 
 }
