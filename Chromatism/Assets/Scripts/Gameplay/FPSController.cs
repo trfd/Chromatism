@@ -22,6 +22,7 @@ public class FPSController : MonoBehaviour
 
 	// Refs
 	public GameObject _camera;
+	public GameObject _weapon;
 	public Animator _weaponAnimator;
 
 
@@ -29,6 +30,8 @@ public class FPSController : MonoBehaviour
 	private int m_forward = 0;
 	private int m_right = 0;
 	private bool m_canJump = false;
+	private float m_weaponRotation = 0;
+	private Timer m_rotateTimer;
 	private float m_yOffset = -0.75f;
 	private float m_feetRadius = 0.4f;
 	private float m_jumpCd = 1f;
@@ -101,12 +104,25 @@ public class FPSController : MonoBehaviour
 		if(m_forward != 0)
 		{
 			transform.position += transform.forward * (m_forward * m_properties.EntityVelocity * Time.deltaTime);
+		}else{
+			_weaponAnimator.SetBool("Walk", false);
 		}
 
 		if(m_right != 0)
 		{
 			transform.position += transform.right * (m_right * m_properties.EntityVelocity * Time.deltaTime);
+
 		}
+
+//		if(m_weaponRotation != 0)
+//		{
+//			m_weaponRotation += m_weaponRotation > 0 ? : ;
+//		}
+//		Vector3 currEuler = _weapon.transform.localRotation.eulerAngles;
+//		currEuler.y = m_weaponRotation * (m_right * _rotateSpeed);
+//
+//		_weapon.transform.localRotation = Quaternion.Euler(currEuler);
+
 	}
 
 	void Update()
@@ -140,6 +156,7 @@ public class FPSController : MonoBehaviour
 			StartDash(transform.forward);
 		}
 
+		_weaponAnimator.SetBool("Walk", true);
 		m_lastDirection = Direction.FORWARD;
 		m_doubleKeyTimer.Reset(0.3f);
 	}
@@ -154,6 +171,7 @@ public class FPSController : MonoBehaviour
 			StartDash(-transform.forward);
 		}
 		
+		_weaponAnimator.SetBool("Walk", true);
 		m_lastDirection = Direction.BACKWARD;
 		m_doubleKeyTimer.Reset(0.3f);
 	}
