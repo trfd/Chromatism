@@ -29,8 +29,10 @@ public class FPSController : MonoBehaviour
 	private int m_forward = 0;
 	private int m_right = 0;
 	private bool m_canJump = false;
-	private float m_yOffset;
-	private float m_feetRadius;
+	private float m_yOffset = -0.75f;
+	private float m_feetRadius = 0.4f;
+	private float m_jumpCd = 1f;
+	private Timer m_jumpTimer;
 
 	enum Direction
 	{
@@ -74,6 +76,7 @@ public class FPSController : MonoBehaviour
 		m_doubleKeyTimer = new Timer();
 		m_dashTimer = new Timer();
 		m_reticleTimer = new Timer();
+		m_jumpTimer = new Timer(m_jumpCd);
 
 		m_properties = GetComponent<EntityProperties>();
 		GPEventManager.Instance.Register("PlayerWeaponShoot", Shoot);
@@ -112,6 +115,13 @@ public class FPSController : MonoBehaviour
 		{
 			float size = Mathf.Lerp(_reticleSize + _reticlegrowth, _reticleSize, 1 - m_reticleTimer.CurrentNormalized);
 			_reticle.transform.localScale = Vector3.one * size;
+		}
+
+		if(IsGrounding() && m_jumpTimer.IsElapsedLoop)
+		{
+			Grounding ();
+			StopDash();
+			rigidbody.velocity = Vector3.zero;
 		}
 	}
 
@@ -199,6 +209,7 @@ public class FPSController : MonoBehaviour
 	void Jump()
 	{
 		rigidbody.AddForce(Vector3.up * m_properties.Gravity);
+		m_jumpTimer.Reset(m_jumpCd);
 		m_canJump = false;
 		
 		Fabric.EventManager.Instance.PostEvent("foot_jump",gameObject);
@@ -256,18 +267,13 @@ public class FPSController : MonoBehaviour
 	// verifying if we can jump again
 	bool IsGrounding()
 	{
-		Collider[] cols = Physics.OverlapSphere(transform.position + Vector3.up * m_yOffset, 
-		                                        m_feetRadius,
-		                                        1 << LayerMask.NameToLayer("wall") | 1 << LayerMask.NameToLayer("Lattes"));
-		
+		Collider[] cols = Physics.OverlapSphere(transform.position + Vector3.up * m_yOffset, m_feetRadius, ~(1 << LayerMask.NameToLayer("Player")));
+
 		return cols.Length > 0;
 	}
 
 	void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.CompareTag ("ground"))
-			Grounding ();
-
 		StopDash();
 		rigidbody.velocity = Vector3.zero;
 		
