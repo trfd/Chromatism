@@ -126,12 +126,6 @@ public class EnemyBehaviour : MonoBehaviour
 
 	#region Enemy Death
 
-	private void OnEnemyDie(Pawn pawn)
-	{
-		GPEventManager.Instance.Raise("EnemyDied",new GameObjectEvent(this.gameObject));
-
-		SpawnOrbs();
-	}
 
 	private void SpawnOrbs()
 	{
@@ -160,6 +154,14 @@ public class EnemyBehaviour : MonoBehaviour
 	#endregion
 
 	#region Delegate
+
+	private void OnEnemyDie(Pawn pawn)
+	{
+		GPEventManager.Instance.Raise("EnemyDied",new GameObjectEvent(this.gameObject));
+		
+		SpawnOrbs();
+	}
+
 
 	private void OnEnemyWeaponShoot(Weapon weapon)
 	{

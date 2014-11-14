@@ -27,13 +27,90 @@
 using UnityEngine;
 using System.Collections;
 
+using System.Collections.Generic;
+
 public class WaveManager : MonoBehaviour
 {
-	void Start()
+	#region Singleton
+	
+	private static WaveManager m_instance;
+	
+	public static WaveManager Instance
+	{
+		get
+		{
+			if(m_instance == null)
+			{
+				m_instance = GameObject.FindObjectOfType<WaveManager>();
+				//DontDestroyOnLoad(m_instance.gameObject);
+			}
+			
+			return m_instance;
+		}
+	}
+	
+	void Awake() 
+	{
+		if(m_instance == null)
+		{
+			m_instance = this;
+			m_instance.Init();
+			//DontDestroyOnLoad(this);
+		}
+		else
+		{
+			if(this != m_instance)
+				Destroy(this.gameObject);
+		}
+	}
+	
+	#endregion 
+
+	private List<GameObject> m_enemies;
+
+	private int m_currWaveIdx;
+
+	public SpawnWave[] _waves;
+
+	void Init()
 	{
 	}
 
-	void Update()
+	void Start()
 	{
+		m_enemies = new List<GameObject>();
+
+		m_currWaveIdx = 0;
+
+		GPEventManager.Instance.Register("EnemySpawned",OnEnemySpawned);
+		GPEventManager.Instance.Register("EnemyDied",OnEnemyDied);
+
+		UpdateWaves();
+	}
+
+	void UpdateWaves()
+	{
+		if(m_enemies.Count == 0)
+		{
+			Debug.Log("Start Wave "+m_currWaveIdx);
+			_waves[m_currWaveIdx].StartWave();
+			m_currWaveIdx = (m_currWaveIdx+1)%_waves.Length;
+		}
+	}
+
+	void OnEnemySpawned(string evtName, GPEvent evt)
+	{
+		GameObjectEvent goEvt = (GameObjectEvent) evt;
+
+		m_enemies.Add(goEvt._object);
+	}
+
+	void OnEnemyDied(string evtName, GPEvent evt)
+	{
+		GameObjectEvent goEvt = (GameObjectEvent) evt;
+
+		m_enemies.Remove(goEvt._object);
+
+		UpdateWaves();
 	}
 }
