@@ -158,6 +158,8 @@ public class EnemyBehaviour : MonoBehaviour
 	private void OnEnemyDie(Pawn pawn)
 	{
 		GPEventManager.Instance.Raise("EnemyDied",new GameObjectEvent(this.gameObject));
+
+        Fabric.EventManager.Instance.PostEvent("enemydeath", gameObject);
 		
 		SpawnOrbs();
 	}
