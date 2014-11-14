@@ -247,8 +247,8 @@ public class FPSController : MonoBehaviour
 	{
 		m_canJump = true;
 		
-		Fabric.EventManager.Instance.PostEvent("foot_fall",gameObject);
-		Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
+		//Fabric.EventManager.Instance.PostEvent("foot_fall",gameObject);
+		//Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
 	}
 
 	#endregion
