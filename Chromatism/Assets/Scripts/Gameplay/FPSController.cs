@@ -104,14 +104,19 @@ public class FPSController : MonoBehaviour
 		if(m_forward != 0)
 		{
 			transform.position += transform.forward * (m_forward * m_properties.EntityVelocity * Time.deltaTime);
-		}else{
-			_weaponAnimator.SetBool("Walk", false);
 		}
 
 		if(m_right != 0)
 		{
 			transform.position += transform.right * (m_right * m_properties.EntityVelocity * Time.deltaTime);
 
+		}
+
+		if(m_forward != 0 || m_right != 0)
+		{
+			_weaponAnimator.SetBool("Walk", true);
+		}else{
+			_weaponAnimator.SetBool("Walk", false);
 		}
 
 //		if(m_weaponRotation != 0)
@@ -133,11 +138,17 @@ public class FPSController : MonoBehaviour
 			_reticle.transform.localScale = Vector3.one * size;
 		}
 
-		if(IsGrounding() && m_jumpTimer.IsElapsedLoop)
+		if(IsGrounding())
 		{
-			Grounding ();
-			StopDash();
-			rigidbody.velocity = Vector3.zero;
+			if(m_jumpTimer.IsElapsedLoop)
+			{
+				Grounding ();
+				StopDash();
+				rigidbody.velocity = Vector3.zero;
+			}
+		}else{
+			_weaponAnimator.SetBool("Walk", false);
+			m_canJump = false;
 		}
 	}
 
@@ -156,7 +167,6 @@ public class FPSController : MonoBehaviour
 			StartDash(transform.forward);
 		}
 
-		_weaponAnimator.SetBool("Walk", true);
 		m_lastDirection = Direction.FORWARD;
 		m_doubleKeyTimer.Reset(0.3f);
 	}
@@ -170,8 +180,7 @@ public class FPSController : MonoBehaviour
 		{
 			StartDash(-transform.forward);
 		}
-		
-		_weaponAnimator.SetBool("Walk", true);
+
 		m_lastDirection = Direction.BACKWARD;
 		m_doubleKeyTimer.Reset(0.3f);
 	}
