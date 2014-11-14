@@ -39,7 +39,6 @@
 		{
     		v2f o;
     		o.pos = mul (UNITY_MATRIX_MVP, v.vertex);
-    		UNITY_TRANSFER_DEPTH(o.depth);
     		o.uv_MainTex.xy = v.texcoord.xy;
     		return o;
 		}
