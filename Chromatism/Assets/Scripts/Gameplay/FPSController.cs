@@ -22,7 +22,7 @@ public class FPSController : MonoBehaviour
 
 	// Refs
 	public GameObject _camera;
-	public Pool _pool;
+	public Animator _weaponAnimator;
 
 
 	// Movement members
@@ -75,6 +75,7 @@ public class FPSController : MonoBehaviour
 
 		m_properties = GetComponent<EntityProperties>();
 		GPEventManager.Instance.Register("PlayerWeaponShoot", Shoot);
+		GPEventManager.Instance.Register("PlayerWeaponStartReload", StartReload);
 	}
 
 	// applying movement
@@ -241,4 +242,9 @@ public class FPSController : MonoBehaviour
 	}
 
 	#endregion
+
+	void StartReload(string evtName, GPEvent gpEvent)
+	{
+		_weaponAnimator.SetTrigger("Reload");
+	}
 }

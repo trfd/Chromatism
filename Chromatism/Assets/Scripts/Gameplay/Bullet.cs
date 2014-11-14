@@ -100,7 +100,8 @@ public class Bullet : PoolableObject
 		else
 			transform.position += Time.deltaTime * Velocity;
 
-		transform.rotation =  Quaternion.LookRotation(Velocity);
+		if(Velocity != Vector3.zero)
+			transform.rotation =  Quaternion.LookRotation(Velocity);
 	}
 
 	void OnCollisionEnter(Collision coll)
