@@ -1,5 +1,5 @@
 ﻿//
-// WaveManager.cs
+// FabricManagerHandler.cs
 //
 // Author(s):
 //       Baptiste Dupy <baptiste.dupy@gmail.com>
@@ -27,22 +27,20 @@
 using UnityEngine;
 using System.Collections;
 
-using System.Collections.Generic;
-
-public class WaveManager : MonoBehaviour
+public class FabricManagerHandler : MonoBehaviour
 {
 	#region Singleton
 	
-	private static WaveManager m_instance;
+	private static FabricManagerHandler m_instance;
 	
-	public static WaveManager Instance
+	public static FabricManagerHandler Instance
 	{
 		get
 		{
 			if(m_instance == null)
 			{
-				m_instance = GameObject.FindObjectOfType<WaveManager>();
-				//DontDestroyOnLoad(m_instance.gameObject);
+				m_instance = GameObject.FindObjectOfType<FabricManagerHandler>();
+				DontDestroyOnLoad(m_instance.gameObject);
 			}
 			
 			return m_instance;
@@ -54,8 +52,7 @@ public class WaveManager : MonoBehaviour
 		if(m_instance == null)
 		{
 			m_instance = this;
-			m_instance.Init();
-			//DontDestroyOnLoad(this);
+			DontDestroyOnLoad(this);
 		}
 		else
 		{
@@ -65,55 +62,4 @@ public class WaveManager : MonoBehaviour
 	}
 	
 	#endregion 
-
-	private List<GameObject> m_enemies;
-
-	private int m_currWaveIdx;
-
-	public SpawnWave[] _waves;
-
-	void Init()
-	{
-	}
-
-	void Start()
-	{
-		m_enemies = new List<GameObject>();
-
-		m_currWaveIdx = 0;
-
-		GPEventManager.Instance.Register("EnemySpawned",OnEnemySpawned);
-		GPEventManager.Instance.Register("EnemyDied",OnEnemyDied);
-
-
-		_waves[m_currWaveIdx].StartWave();
-	}
-
-	void Update()
-	{
-		if(m_enemies.Count == 0 && _waves[m_currWaveIdx].HasSpawned)
-		{
-			_waves[m_currWaveIdx].Clear();
-			m_currWaveIdx = (m_currWaveIdx+1)%_waves.Length;
-			Debug.Log("Start Wave "+m_currWaveIdx);
-			_waves[m_currWaveIdx].StartWave();
-		}
-
-	}
-
-	void OnEnemySpawned(string evtName, GPEvent evt)
-	{
-		GameObjectEvent goEvt = (GameObjectEvent) evt;
-
-		m_enemies.Add(goEvt._object);
-	}
-
-	void OnEnemyDied(string evtName, GPEvent evt)
-	{
-		GameObjectEvent goEvt = (GameObjectEvent) evt;
-
-		m_enemies.Remove(goEvt._object);
-
-		//UpdateWaves();
-	}
 }

@@ -15,7 +15,26 @@ public class SpawnWave : MonoBehaviour
 	#endregion
 	
 	#region Properties
-	
+
+	public bool IsStarted
+	{
+		get; set;
+	}
+
+	public bool HasSpawned
+	{
+		get
+		{
+			foreach(SpawnPoint pt in _spawnPoints)
+			{
+				if(pt.HasSpawned)
+					return true;
+			}
+
+			return false;
+		}
+	}
+
 	#endregion
 	
 	
@@ -42,6 +61,12 @@ public class SpawnWave : MonoBehaviour
 	#endregion
 	
 	#region Functions
+
+	public void Clear()
+	{
+		foreach(SpawnPoint pt in _spawnPoints)
+			pt.HasSpawned = false;
+	}
 
 	public void StartWave()
 	{
