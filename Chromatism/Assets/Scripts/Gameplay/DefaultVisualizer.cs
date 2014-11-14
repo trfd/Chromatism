@@ -26,9 +26,9 @@
 
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 [RequireComponent(typeof(EntityProperties))]
-[RequireComponent(typeof(MeshRenderer))]
 public class DefaultVisualizer : MonoBehaviour
 {
 	#region Private Members
@@ -37,6 +37,8 @@ public class DefaultVisualizer : MonoBehaviour
 
 	#endregion
 
+	public List<Renderer> _renderers;
+
 	void Start()
 	{
 		m_properties = GetComponent<EntityProperties>();
@@ -44,8 +46,9 @@ public class DefaultVisualizer : MonoBehaviour
 
 	void Update()
 	{
-		renderer.material.color = new Color(m_properties.ColorChannel0,
-		                                    m_properties.ColorChannel1,
-		                                    m_properties.ColorChannel2);
+		foreach(Renderer renderer in _renderers)
+			renderer.material.color = new Color(m_properties.ColorChannel0,
+		                               	        m_properties.ColorChannel1,
+		                                        m_properties.ColorChannel2);
 	}
 }
