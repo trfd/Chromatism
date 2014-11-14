@@ -1,7 +1,8 @@
 ﻿using UnityEngine;
 using System.Collections;
 
-public class SpawnPoint : MonoBehaviour {
+public class SpawnPoint : MonoBehaviour 
+{
 
 	#region members
 
@@ -17,8 +18,14 @@ public class SpawnPoint : MonoBehaviour {
 	[Range(0.0f,1f)]
 	public float _colorChannel2;
 
+	[InspectorLabel]
 	private int m_numberToSpawn;
 	private Timer m_spawnTimer;
+
+	public bool HasSpawned
+	{
+		get; set;
+	}
 
 	#endregion
 
@@ -31,19 +38,21 @@ public class SpawnPoint : MonoBehaviour {
 			Debug.LogError("Set the fucking values you dumbass !");
 			return;
 		}
-
-		StartSpawn();
 	}
 
 	void Update()
 	{
+		if(m_spawnTimer == null)
+			return;
+
 		if(m_spawnTimer.IsElapsedLoop && m_numberToSpawn > 0)
 		{
 			SpawnOneEnemy();
+
 			if(m_numberToSpawn > 0)
-			{
 				m_spawnTimer.Reset(_cooldown);
-			}
+			else
+				m_spawnTimer = null;
 		}
 	}
 
@@ -67,6 +76,7 @@ public class SpawnPoint : MonoBehaviour {
 
 		var enemySpawned = GameObject.Instantiate(_enemyPrefab, transform.position, Quaternion.identity) as GameObject;
 		var bEnemyB = enemySpawned.GetComponent<BasicEnemyBehaviour>();
+
 		if(bEnemyB == null)
 		{
 			Debug.LogError("Enemy should have BasicEnemyBehaviours class !");
@@ -82,8 +92,12 @@ public class SpawnPoint : MonoBehaviour {
 			return;
 		}
 
-		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB);
+		m_numberToSpawn--;
+		HasSpawned = true;
 
+		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB, new Vector3(_colorChannel0,_colorChannel1,_colorChannel2));
+
+		GPEventManager.Instance.Raise("EnemySpawned", new GameObjectEvent(enemyB.gameObject));
 	}
 
 	#endregion

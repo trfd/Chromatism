@@ -22,6 +22,7 @@ public class FPSController : MonoBehaviour
 
 	// Refs
 	public GameObject _camera;
+	public GameObject _weapon;
 	public Animator _weaponAnimator;
 
 
@@ -29,8 +30,12 @@ public class FPSController : MonoBehaviour
 	private int m_forward = 0;
 	private int m_right = 0;
 	private bool m_canJump = false;
-	private float m_yOffset;
-	private float m_feetRadius;
+	private float m_weaponRotation = 0;
+	private Timer m_rotateTimer;
+	private float m_yOffset = -0.75f;
+	private float m_feetRadius = 0.4f;
+	private float m_jumpCd = 1f;
+	private Timer m_jumpTimer;
 
 	enum Direction
 	{
@@ -74,6 +79,7 @@ public class FPSController : MonoBehaviour
 		m_doubleKeyTimer = new Timer();
 		m_dashTimer = new Timer();
 		m_reticleTimer = new Timer();
+		m_jumpTimer = new Timer(m_jumpCd);
 
 		m_properties = GetComponent<EntityProperties>();
 		GPEventManager.Instance.Register("PlayerWeaponShoot", Shoot);
@@ -103,7 +109,25 @@ public class FPSController : MonoBehaviour
 		if(m_right != 0)
 		{
 			transform.position += transform.right * (m_right * m_properties.EntityVelocity * Time.deltaTime);
+
 		}
+
+		if(m_forward != 0 || m_right != 0)
+		{
+			_weaponAnimator.SetBool("Walk", true);
+		}else{
+			_weaponAnimator.SetBool("Walk", false);
+		}
+
+//		if(m_weaponRotation != 0)
+//		{
+//			m_weaponRotation += m_weaponRotation > 0 ? : ;
+//		}
+//		Vector3 currEuler = _weapon.transform.localRotation.eulerAngles;
+//		currEuler.y = m_weaponRotation * (m_right * _rotateSpeed);
+//
+//		_weapon.transform.localRotation = Quaternion.Euler(currEuler);
+
 	}
 
 	void Update()
@@ -112,6 +136,19 @@ public class FPSController : MonoBehaviour
 		{
 			float size = Mathf.Lerp(_reticleSize + _reticlegrowth, _reticleSize, 1 - m_reticleTimer.CurrentNormalized);
 			_reticle.transform.localScale = Vector3.one * size;
+		}
+
+		if(IsGrounding())
+		{
+			if(m_jumpTimer.IsElapsedLoop)
+			{
+				Grounding ();
+				StopDash();
+				rigidbody.velocity = Vector3.zero;
+			}
+		}else{
+			_weaponAnimator.SetBool("Walk", false);
+			m_canJump = false;
 		}
 	}
 
@@ -143,7 +180,7 @@ public class FPSController : MonoBehaviour
 		{
 			StartDash(-transform.forward);
 		}
-		
+
 		m_lastDirection = Direction.BACKWARD;
 		m_doubleKeyTimer.Reset(0.3f);
 	}
@@ -199,6 +236,7 @@ public class FPSController : MonoBehaviour
 	void Jump()
 	{
 		rigidbody.AddForce(Vector3.up * m_properties.Gravity);
+		m_jumpTimer.Reset(m_jumpCd);
 		m_canJump = false;
 		
 		Fabric.EventManager.Instance.PostEvent("foot_jump",gameObject);
@@ -209,8 +247,8 @@ public class FPSController : MonoBehaviour
 	{
 		m_canJump = true;
 		
-		Fabric.EventManager.Instance.PostEvent("foot_fall",gameObject);
-		Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
+		//Fabric.EventManager.Instance.PostEvent("foot_fall",gameObject);
+		//Fabric.EventManager.Instance.PostEvent("foot_on",gameObject);
 	}
 
 	#endregion
@@ -256,18 +294,13 @@ public class FPSController : MonoBehaviour
 	// verifying if we can jump again
 	bool IsGrounding()
 	{
-		Collider[] cols = Physics.OverlapSphere(transform.position + Vector3.up * m_yOffset, 
-		                                        m_feetRadius,
-		                                        1 << LayerMask.NameToLayer("wall") | 1 << LayerMask.NameToLayer("Lattes"));
-		
+		Collider[] cols = Physics.OverlapSphere(transform.position + Vector3.up * m_yOffset, m_feetRadius, ~(1 << LayerMask.NameToLayer("Player")));
+
 		return cols.Length > 0;
 	}
 
 	void OnCollisionEnter(Collision collision)
 	{
-		if (collision.gameObject.CompareTag ("ground"))
-			Grounding ();
-
 		StopDash();
 		rigidbody.velocity = Vector3.zero;
 		

@@ -2,7 +2,8 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class SpawnWave : MonoBehaviour {
+public class SpawnWave : MonoBehaviour 
+{
 
 	#region members
 
@@ -14,7 +15,26 @@ public class SpawnWave : MonoBehaviour {
 	#endregion
 	
 	#region Properties
-	
+
+	public bool IsStarted
+	{
+		get; set;
+	}
+
+	public bool HasSpawned
+	{
+		get
+		{
+			foreach(SpawnPoint pt in _spawnPoints)
+			{
+				if(pt.HasSpawned)
+					return true;
+			}
+
+			return false;
+		}
+	}
+
 	#endregion
 	
 	
@@ -27,22 +47,31 @@ public class SpawnWave : MonoBehaviour {
 			Debug.LogError("Set the fucking values you dumbass !");
 			return;
 		}
-
-		m_spawnTimer = new Timer(_waveTiming);
 	}
 	
 	void Update()
 	{
-		if(m_spawnTimer.IsElapsedLoop)
+		if(m_spawnTimer != null && m_spawnTimer.IsElapsedLoop)
 		{
 			Spawn();
-			m_spawnTimer.Reset(_waveTiming);
+			m_spawnTimer = null;
 		}
 	}
 	
 	#endregion
 	
 	#region Functions
+
+	public void Clear()
+	{
+		foreach(SpawnPoint pt in _spawnPoints)
+			pt.HasSpawned = false;
+	}
+
+	public void StartWave()
+	{
+		m_spawnTimer = new Timer(_waveTiming);
+	}
 	
 	void Spawn()
 	{
