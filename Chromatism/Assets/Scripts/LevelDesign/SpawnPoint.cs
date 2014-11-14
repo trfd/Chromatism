@@ -67,6 +67,7 @@ public class SpawnPoint : MonoBehaviour {
 
 		var enemySpawned = GameObject.Instantiate(_enemyPrefab, transform.position, Quaternion.identity) as GameObject;
 		var bEnemyB = enemySpawned.GetComponent<BasicEnemyBehaviour>();
+
 		if(bEnemyB == null)
 		{
 			Debug.LogError("Enemy should have BasicEnemyBehaviours class !");
@@ -82,7 +83,7 @@ public class SpawnPoint : MonoBehaviour {
 			return;
 		}
 
-		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB);
+		DifficultyManager.Instance.AdjustPropertiesToDifficulty(ref enemyB, new Vector3(_colorChannel0,_colorChannel1,_colorChannel2));
 
 	}
 
