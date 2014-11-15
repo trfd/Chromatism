@@ -113,6 +113,23 @@ public class EnemyBehaviour : MonoBehaviour
 	{
 	}
 
+	void Clear()
+	{
+		if(rigidbody != null)
+		{
+			rigidbody.isKinematic = true;
+			rigidbody.Sleep();
+		}
+
+		if(collider != null)
+			collider.enabled = false;
+
+		Renderer[] renderers = GetComponentsInChildren<Renderer>();
+
+		foreach(Renderer renderer in renderers)
+			renderer.enabled = false;
+	}
+
 	#endregion
 
 	#region Events
@@ -163,7 +180,9 @@ public class EnemyBehaviour : MonoBehaviour
 		
 		SpawnOrbs();
 
-		Destroy(this.gameObject,1.5f);
+		Clear();
+
+		Destroy(this.gameObject, 10f);
 	}
 
 

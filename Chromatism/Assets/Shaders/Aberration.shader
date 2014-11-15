@@ -4,6 +4,7 @@
 	{
 		_MainTex ("Base (RGB)", 2D) = "white" {}
 		_Noise("Base",2D) = "white" {}
+		_AberrationMap("AberrationMap",2D) = "white" {}
 		_Coef ("Coef",float) = 0.0
 		_RedCoef   ("Red Base Coef",float) = 1.0
 		_GreenCoef ("Green Base Coef",float) = 1.0
@@ -21,7 +22,7 @@
 		#include "UnityCG.cginc"
 
 		sampler2D _MainTex;
-		
+		sampler2D _AberrationMap;
 		sampler2D _Noise;
 	
 		float _Coef;
@@ -47,12 +48,14 @@
 		{	
 			float coef = 2.0 * _Coef;
 		
+			half4 mapCoef = tex2D(_AberrationMap,IN.uv_MainTex);
+		
 			half4 offset = tex2D(_Noise, float2(IN.uv_MainTex.y,0));
 			half4 offset2 = tex2D(_Noise, float2(IN.uv_MainTex.y,0.5));
 			
-			half4 red   = tex2D(_MainTex, IN.uv_MainTex + (_RedCoef   + coef) * float2(offset.x,offset2.x));
-			half4 green = tex2D(_MainTex, IN.uv_MainTex + (_GreenCoef + coef) * float2(offset.y,offset2.y));
-			half4 blue  = tex2D(_MainTex, IN.uv_MainTex + (_BlueCoef  + coef) * float2(offset.z,offset2.z));
+			half4 red   = tex2D(_MainTex, IN.uv_MainTex + (_RedCoef   + coef + mapCoef.x) * float2(offset.x,offset2.x));
+			half4 green = tex2D(_MainTex, IN.uv_MainTex + (_GreenCoef + coef + mapCoef.y) * float2(offset.y,offset2.y));
+			half4 blue  = tex2D(_MainTex, IN.uv_MainTex + (_BlueCoef  + coef + mapCoef.z) * float2(offset.z,offset2.z));
 			
 			return float4(red.x,green.y,blue.z,1.0);
 		}

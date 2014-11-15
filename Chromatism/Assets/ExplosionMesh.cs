@@ -1,5 +1,5 @@
 ﻿//
-// DroidRotation.cs
+// ExplosionMesh.cs
 //
 // Author(s):
 //       Baptiste Dupy <baptiste.dupy@gmail.com>
@@ -27,22 +27,58 @@
 using UnityEngine;
 using System.Collections;
 
-public class DroidRotation : MonoBehaviour
+public class ExplosionMesh : MonoBehaviour
 {
 	private Pawn m_pawn;
+	private Timer m_timer;
 
-	public float _velocity;
+	private static int m_sizeID;
+	private static int m_randomnessID;
+
+	public MeshRenderer m_renderer;
+
+	public float _explosionDuration;
+	public AnimationCurve _explosionCurve;
+	public AnimationCurve _randomnessCurve;
 
 	void Start()
 	{
-		m_pawn = GetComponentInParent<Pawn>();
-	}
+		m_pawn = GetComponent<Pawn>();
 
+		m_pawn.OnPawnDie += OnEnemyDie;
+
+		m_sizeID = Shader.PropertyToID("_Size");
+		m_randomnessID = Shader.PropertyToID("_Randomness");
+	
+		m_renderer.material.SetFloat(m_randomnessID,0f);
+		m_renderer.material.SetFloat(m_sizeID,0f);
+	}
+	
 	void Update()
 	{
-		if(m_pawn.IsDead)
-			return;
+		if(m_timer != null && !m_timer.IsElapsedLoop)
+		{	
+			if(!m_renderer.enabled)
+				m_renderer.enabled = true;
 
-		transform.Rotate(_velocity * Time.deltaTime * Vector3.right);
+			m_renderer.material.SetFloat(m_randomnessID,_randomnessCurve.Evaluate(1f-m_timer.CurrentNormalized));
+			m_renderer.material.SetFloat(m_sizeID,_explosionCurve.Evaluate(1f-m_timer.CurrentNormalized));
+		}
 	}
+
+	void OnEnemyDie(Pawn pawn)
+	{
+		m_renderer.enabled = true;
+		m_renderer.material.SetFloat(m_randomnessID,0);
+		m_renderer.material.SetFloat(m_sizeID,0);
+
+		m_timer = new Timer(_explosionDuration);
+	}
+
+	[InspectorButton("Explosion")]
+	void TestAnim()
+	{
+		m_timer = new Timer(_explosionDuration);
+	}
+
 }

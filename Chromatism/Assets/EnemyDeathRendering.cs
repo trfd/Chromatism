@@ -30,89 +30,62 @@ using System.Collections;
 [RequireComponent(typeof(EnemyBehaviour))]
 public class EnemyDeathRendering : MonoBehaviour
 {
-	private EnemyBehaviour m_enemy;
+	public MeshFilter m_meshFilter;
 
-	private Timer m_timer;
+#if UNITY_EDITOR
 
-	private bool m_isPlayingHit;
-	private bool m_isPlayingDie;
-
-	private int m_coefID;
-
-	public Renderer _renderer;
-	
-	public float _hitDuration;
-	public float _dieDuration;
-
-	public AnimationCurve _hitAnimation;
-	public AnimationCurve _dieAnimation;
-
-	void Start()
+	[InspectorButton("PrecomputeExplosion")]
+	void PrecomputeExplodedMesh()
 	{
-		m_timer = new Timer();
-
-		Pawn pawn = GetComponent<Pawn>();
-
-		pawn.OnPawnHit += OnEnemyHit;
-		pawn.OnPawnDie += OnEnemyDie;
-
-		m_coefID = Shader.PropertyToID("_AberrationCoef");
-	}
-
-	void Update()
-	{
-		if(!m_timer.IsElapsedLoop)
-		{
-			if(m_isPlayingDie)
-				_renderer.material.SetFloat(m_coefID,_dieAnimation.Evaluate(m_timer.CurrentNormalized));
-			else if(m_isPlayingHit)
-				_renderer.material.SetFloat(m_coefID,_hitAnimation.Evaluate(m_timer.CurrentNormalized));
-		}
-
-		if(m_timer.IsElapsedLoop)
-		{
-			if(m_isPlayingHit)
-				_renderer.material.SetFloat(m_coefID,0f);
-			
-			m_isPlayingDie = false;
-			m_isPlayingHit = false;
-		}
-	}
-
-	void OnEnemyHit(Pawn pawn)
-	{
-		if(pawn.IsDead)
+		if(m_meshFilter == null)
 			return;
 
-		m_timer.Reset(_hitDuration);
+		Mesh originalMesh = m_meshFilter.mesh;
 
-		m_isPlayingDie = false;
-		m_isPlayingHit = true;
+		Mesh explMesh = new Mesh();
+
+		explMesh.Clear();
+
+		int[] triangles = new int[originalMesh.triangles.Length];
+
+		Vector3[] vertices = new Vector3[triangles.Length];
+		Vector3[] normals  = new Vector3[triangles.Length];
+
+		Vector2[] uvs = new Vector2[triangles.Length];
+
+		int triangleCount = triangles.Length / 3;
+
+		for(int i=0 ; i<triangleCount ; i++)
+		{
+			triangles[3*i]   = 3*i;
+			triangles[3*i+1] = 3*i+1;
+			triangles[3*i+2] = 3*i+2;
+
+			vertices[3*i]   = originalMesh.vertices[originalMesh.triangles[3*i]];
+			vertices[3*i+1] = originalMesh.vertices[originalMesh.triangles[3*i+1]];
+			vertices[3*i+2] = originalMesh.vertices[originalMesh.triangles[3*i+2]];
+
+			Vector3 normal = 0.333f * originalMesh.normals[originalMesh.triangles[3*i]]   +
+							 0.333f * originalMesh.normals[originalMesh.triangles[3*i+1]] + 
+							 0.333f * originalMesh.normals[originalMesh.triangles[3*i+2]];
+
+			normals[3*i]   = normal;
+			normals[3*i+1] = normal;
+			normals[3*i+2] = normal;
+
+			uvs[3*i]   = originalMesh.uv[originalMesh.triangles[3*i]];
+			uvs[3*i+1] = originalMesh.uv[originalMesh.triangles[3*i+1]];
+			uvs[3*i+2] = originalMesh.uv[originalMesh.triangles[3*i+2]];
+		}
+
+		explMesh.vertices  = vertices;
+		explMesh.triangles = triangles;
+		explMesh.normals   = normals;
+		explMesh.uv        = uvs;
+
+		UnityEditor.AssetDatabase.CreateAsset(explMesh,"Assets/Mesh_ExplodedEnemy.asset");
+		UnityEditor.AssetDatabase.SaveAssets();
 	}
 
-	void OnEnemyDie(Pawn pawn)
-	{
-		m_timer.Reset(_dieDuration);
-
-		m_isPlayingDie = true;
-		m_isPlayingHit = false;
-	}
-
-	[InspectorButton("Hit")]
-	void TestHit()
-	{
-		m_timer.Reset(_hitDuration);
-		
-		m_isPlayingDie = false;
-		m_isPlayingHit = true;
-	}
-
-	[InspectorButton("Death")]
-	void TestDeath()
-	{
-		m_timer.Reset(_dieDuration);
-		
-		m_isPlayingDie = true;
-		m_isPlayingHit = false;
-	}
+#endif
 }

@@ -1,5 +1,5 @@
 ﻿//
-// DroidRotation.cs
+// AberrationCamera.cs
 //
 // Author(s):
 //       Baptiste Dupy <baptiste.dupy@gmail.com>
@@ -27,22 +27,22 @@
 using UnityEngine;
 using System.Collections;
 
-public class DroidRotation : MonoBehaviour
+[RequireComponent(typeof(Camera))]
+public class AberrationCamera : MonoBehaviour
 {
-	private Pawn m_pawn;
+	private Camera m_camera;
 
-	public float _velocity;
+	public Camera _mainCamera;
 
 	void Start()
 	{
-		m_pawn = GetComponentInParent<Pawn>();
+		m_camera = GetComponent<Camera>();
 	}
 
 	void Update()
 	{
-		if(m_pawn.IsDead)
-			return;
-
-		transform.Rotate(_velocity * Time.deltaTime * Vector3.right);
+		m_camera.projectionMatrix =_mainCamera.projectionMatrix;
+		transform.position = _mainCamera.transform.position;
+		transform.rotation = _mainCamera.transform.rotation;
 	}
 }
