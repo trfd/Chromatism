@@ -138,6 +138,7 @@ public class PlayerBehaviour : MonoBehaviour
 	private void OnPlayerDie(Pawn pawn)
 	{
 		GPEventManager.Instance.Raise("PlayerDied",new GPEvent());
+		Fabric.EventManager.Instance.PostEvent("player_death", gameObject);
 
 		GA.API.Design.NewEvent("Player:Death");
 		GA.API.Design.NewEvent("Player:Death:Location",transform.position);
