@@ -179,6 +179,9 @@ public class Patrol : MonoBehaviour
 
 	private void MoveGameObject(GameObject obj,PatrolState state)
 	{
+		if(obj.rigidbody.isKinematic)
+			return;
+
 		Vector3 target = _patrolPoints[state._targetPatrolPointIndex].transform.position;
 
 		Vector3 vel = (target - obj.transform.position).normalized * state._velocity;
