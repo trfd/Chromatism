@@ -108,6 +108,12 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	void Update()
 	{
+		if(m_pawn.IsDead)
+		{
+			m_currState = State.REST;
+			return;
+		}
+
 		if(m_aiTimer.IsElapsedLoop)
 		{
 			UpdateAI();
@@ -123,12 +129,6 @@ public class BasicEnemyBehaviour : MonoBehaviour
 
 	private void UpdateAI()
 	{
-		if(m_pawn.IsDead)
-		{
-			m_currState = State.REST;
-			return;
-		}
-
 		if(IsSeeingPlayer())
 			m_currState = State.ATTACK;
 		else if(_patrolState._patrol != null)

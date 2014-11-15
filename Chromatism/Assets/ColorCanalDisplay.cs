@@ -96,8 +96,11 @@ public class ColorCanalDisplay : MonoBehaviour
 
 	void AddData()
 	{
-		m_data[m_currIdx] = m_player.Properties.ColorValueChannel(_channel);
+		if(m_data[m_currIdx] == m_player.Properties.ColorValueChannel(_channel))
+			return;
+		
 		m_currIdx = (m_currIdx+1)%_steps;
+		m_data[m_currIdx] = m_player.Properties.ColorValueChannel(_channel);
 
 		ComputeMesh();
 	}
@@ -134,6 +137,19 @@ public class ColorCanalDisplay : MonoBehaviour
 	{
 		Vector3 tmp = Vector3.zero;
 
+		float min = float.MaxValue;
+		float max = float.MinValue;
+
+		for(int i = 0 ; i < m_data.Length ; i++)
+		{
+			if(min > m_data[i])
+				min = m_data[i];
+
+			if(max < m_data[i])
+				max = m_data[i];
+		}
+
+
 		for(int i = 0 ; i < m_data.Length ; i++)
 		{
 			int idx = (m_currIdx+i)%_steps;
@@ -141,7 +157,7 @@ public class ColorCanalDisplay : MonoBehaviour
 			// Value vertices
 
 			tmp.x = _xScale * i;
-			tmp.y = _yScale * m_data[idx];
+			tmp.y = _yScale * Mathf.InverseLerp(min,max,m_data[idx])+0.05f;
 
 			m_vertices[i] = tmp;
 
