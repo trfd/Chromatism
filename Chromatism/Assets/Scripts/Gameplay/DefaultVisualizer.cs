@@ -39,6 +39,8 @@ public class DefaultVisualizer : MonoBehaviour
 
 	public List<Renderer> _renderers;
 
+	public float _colorBoost = 1f;
+
 	void Start()
 	{
 		m_properties = GetComponent<EntityProperties>();
@@ -47,8 +49,8 @@ public class DefaultVisualizer : MonoBehaviour
 	void Update()
 	{
 		foreach(Renderer renderer in _renderers)
-			renderer.material.color = new Color(m_properties.ColorChannel0,
-		                               	        m_properties.ColorChannel1,
-		                                        m_properties.ColorChannel2);
+			renderer.material.color = new Color(m_properties.ColorChannel0 * _colorBoost,
+			                                    m_properties.ColorChannel1 * _colorBoost,
+			                                    m_properties.ColorChannel2 * _colorBoost);
 	}
 }
