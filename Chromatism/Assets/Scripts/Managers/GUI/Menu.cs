@@ -13,7 +13,7 @@ public class Menu : MonoBehaviour
 
 	void Start()
 	{
-		Debug.Log("plop");
+		GA.API.User.NewUser(GA_User.Gender.Unknown,1900,0);
 //		KeyBinder.Instance.DefineActions("SwitchUpMenu", new KeyActionConfig(KeyType.Menu, 0, SwitchMenu, null));
 //		KeyBinder.Instance.DefineActions("SwitchDownMenu", new KeyActionConfig(KeyType.Menu, 0, SwitchMenu, null));
 //		KeyBinder.Instance.DefineActions("EnterMenu", new KeyActionConfig(KeyType.Menu, 0, EnterMenu, null));

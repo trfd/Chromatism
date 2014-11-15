@@ -138,6 +138,13 @@ public class PlayerBehaviour : MonoBehaviour
 	private void OnPlayerDie(Pawn pawn)
 	{
 		GPEventManager.Instance.Raise("PlayerDied",new GPEvent());
+
+		GA.API.Design.NewEvent("Player:Death");
+		GA.API.Design.NewEvent("Player:Death:Location",transform.position);
+		GA.API.Design.NewEvent("Player:Death:Level", DifficultyManager.Instance.Level);
+		GA.API.Design.NewEvent("Player:Death:Channel0",m_properties.ColorChannel0);
+		GA.API.Design.NewEvent("Player:Death:Channel1",m_properties.ColorChannel1);
+		GA.API.Design.NewEvent("Player:Death:Channel2",m_properties.ColorChannel2);
 	}
 
 	private void OnPlayerHit(Pawn pawn)
