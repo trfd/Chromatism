@@ -31,11 +31,13 @@ public class ColorOrb : MonoBehaviour
 {
 	#region Private Members
 
-	public PlayerBehaviour m_player;
+	private PlayerBehaviour m_player;
 
-	public Vector3 m_random;
+	private Vector3 m_random;
 
-	public bool m_isMovingToPlayer;
+	private bool m_isMovingToPlayer;
+
+	private float m_value;
 
 	#endregion
 
@@ -53,7 +55,12 @@ public class ColorOrb : MonoBehaviour
 
 	public float ColorValue
 	{
-		get; set;
+		get{ return m_value; }
+		set
+		{ 
+			m_value = value; 
+			transform.localScale = transform.localScale * (1f + 0.5f * m_value); 
+		}
 	}
 
 	public Vector3 StationnaryLocation

@@ -146,26 +146,25 @@ public class EnemyBehaviour : MonoBehaviour
 
 	private void SpawnOrbs()
 	{
-		ColorOrb channel0Orb = (ColorOrb) GameObject.Instantiate(_orbPrefab,transform.position,transform.rotation);
-		ColorOrb channel1Orb = (ColorOrb) GameObject.Instantiate(_orbPrefab,transform.position,transform.rotation);
-		ColorOrb channel2Orb = (ColorOrb) GameObject.Instantiate(_orbPrefab,transform.position,transform.rotation);
+		if(_initChannel0 >= 0.1f)
+			SpawnOrb(Channel.CHANNEL_0 , GameManager.Instance._enemyOrbLossChannel0 * _initChannel0);
 
-		channel0Orb._channel = Channel.CHANNEL_0;
-		channel1Orb._channel = Channel.CHANNEL_1;
-		channel2Orb._channel = Channel.CHANNEL_2;
+		if(_initChannel1 >= 0.1f)
+			SpawnOrb(Channel.CHANNEL_1 , GameManager.Instance._enemyOrbLossChannel1 * _initChannel1);
 
-		channel0Orb.StationnaryLocation = transform.position + 
+		if(_initChannel2 >= 0.1f)
+			SpawnOrb(Channel.CHANNEL_2 , GameManager.Instance._enemyOrbLossChannel2 * _initChannel2);
+	}
+
+	private void SpawnOrb(Channel channel, float value)
+	{
+		ColorOrb orb = (ColorOrb) GameObject.Instantiate(_orbPrefab,transform.position,transform.rotation);
+
+		orb.StationnaryLocation = transform.position + 
 			new Vector3(Random.Range(-1f,1f),Random.Range(-0.5f,0.5f),Random.Range(-1f,1f));
 
-		channel1Orb.StationnaryLocation = transform.position + 
-			new Vector3(Random.Range(-1f,1f),Random.Range(-0.5f,0.5f),Random.Range(-1f,1f));
-
-		channel2Orb.StationnaryLocation = transform.position +
-			new Vector3(Random.Range(-1f,1f),Random.Range(-0.5f,0.5f),Random.Range(-1f,1f));
-
-		channel0Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel0;
-		channel1Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel1;
-		channel2Orb.ColorValue = GameManager.Instance._enemyOrbLossChannel0 * _initChannel2;
+		orb.ColorValue = value;
+		orb._channel = channel;
 	}
 
 	#endregion

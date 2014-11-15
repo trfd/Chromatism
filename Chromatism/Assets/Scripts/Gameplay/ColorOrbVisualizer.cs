@@ -34,6 +34,8 @@ public class ColorOrbVisualizer : MonoBehaviour
 
 	private ColorOrb m_orb;
 
+	private Color m_color;
+
 	#endregion
 
 	#region Public Members
@@ -47,26 +49,23 @@ public class ColorOrbVisualizer : MonoBehaviour
 	void Start()
 	{
 		m_orb = GetComponent<ColorOrb>();
-	}
-
-	void Update()
-	{
+	
 		Color c = Color.black;
 
 		switch(m_orb._channel)
 		{
 		case Channel.CHANNEL_0:
-			c.r = m_orb.ColorValue * 1f/GameManager.Instance._enemyOrbLossChannel0;
+			m_color.r = 1.0f;
 			break;
 		case Channel.CHANNEL_1:
-			c.g = m_orb.ColorValue * 1f/GameManager.Instance._enemyOrbLossChannel1;
+			m_color.g = 1.0f;
 			break;
 		case Channel.CHANNEL_2:
-			c.b = m_orb.ColorValue * 1f/GameManager.Instance._enemyOrbLossChannel2;
+			m_color.b = 1.0f;
 			break;
 		}
 
-		renderer.material.color = c;
+		renderer.material.color = m_color;
 	}
 
 	#endregion
