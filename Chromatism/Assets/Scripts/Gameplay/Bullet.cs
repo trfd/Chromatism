@@ -205,7 +205,7 @@ public class Bullet : PoolableObject
 		if(pawn != null)
 		{
 			// Avoid collision with self
-			if(pawn == ParentWeapon.Owner)
+			if(pawn == ParentWeapon.Owner || pawn.tag == ParentWeapon.Owner.tag)
 				return;
 
 			pawn.HitByBullet(this);
